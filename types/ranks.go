@@ -119,6 +119,55 @@ func (rt RankType) String() string {
 // RankShort is the short rank name the datastore stamps onto profiles: the
 // enum name with the RANK_TYPE_ prefix stripped (e.g. "COL"). For uncataloged
 // ids it is the bare decimal (the prefix strip is a no-op on a number).
+func RankShortFromTitle(title string) string {
+	switch strings.TrimSpace(strings.ToLower(title)) {
+	case "private":
+		return "Pvt"
+	case "private first class":
+		return "PFC"
+	case "lance corporal":
+		return "LCpl"
+	case "corporal":
+		return "Cpl"
+	case "sergeant":
+		return "Sgt"
+	case "staff sergeant":
+		return "SSgt"
+	case "gunnery sergeant":
+		return "GySgt"
+	case "master sergeant":
+		return "MSgt"
+	case "first sergeant":
+		return "1stSgt"
+	case "master gunnery sergeant":
+		return "MGySgt"
+	case "sergeant major":
+		return "SgtMaj"
+	case "second lieutenant":
+		return "2ndLt"
+	case "first lieutenant":
+		return "1stLt"
+	case "captain":
+		return "Capt"
+	case "major":
+		return "Maj"
+	case "lieutenant colonel", "liutenant colonel":
+		return "LtCol"
+	case "colonel":
+		return "Col"
+	case "brigadier general":
+		return "BGen"
+	case "major general":
+		return "MajGen"
+	case "lieutenant general":
+		return "LtGen"
+	case "general":
+		return "Gen"
+	default:
+		return title
+	}
+}
+
 func (rt RankType) RankShort() string {
 	return strings.TrimPrefix(rt.String(), "RANK_TYPE_")
 }

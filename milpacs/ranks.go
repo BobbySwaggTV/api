@@ -37,5 +37,5 @@ func (Rank) TableName() string {
 
 func (rank *Rank) ImageURL() string {
 	imageGroup := math.Floor(float64(rank.RankId / 1000))
-	return fmt.Sprintf("https://7cav.us/data/roster_ranks/%d/%d.jpg?%d", int(imageGroup), rank.RankId, rank.RankImage)
+	return fmt.Sprintf("%s/data/roster_ranks/%d/%d.jpg?%d", forumBaseURL(), int(imageGroup), rank.RankId, rank.RankImage)
 }

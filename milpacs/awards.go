@@ -38,7 +38,7 @@ func (Award) TableName() string {
 
 func (award *Award) ImageURL() string {
 	imageGroup := math.Floor(float64(award.AwardId / 1000))
-	return fmt.Sprintf("https://7cav.us/data/roster_awards/%d/%d.jpg?%d", int(imageGroup), award.AwardId, award.AwardImage)
+	return fmt.Sprintf("%s/data/roster_awards/%d/%d.jpg?%d", forumBaseURL(), int(imageGroup), award.AwardId, award.AwardImage)
 }
 
 type AwardRecord struct {

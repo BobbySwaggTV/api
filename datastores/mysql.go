@@ -135,7 +135,7 @@ func (ds Mysql) generateProtoProfile(profile milpacs.Profile) (*types.Profile, e
 		},
 		Rank: &types.Rank{
 			RankId:       profile.RankID,
-			RankShort:    types.RankType(profile.RankID).RankShort(),
+			RankShort:    types.RankShortFromTitle(profile.Rank.Title),
 			RankFull:     profile.Rank.Title,
 			RankImageUrl: profile.Rank.ImageURL(),
 		},
@@ -280,7 +280,7 @@ func (ds Mysql) generateLiteProtoProfile(profile milpacs.Profile) (*types.LitePr
 		},
 		Rank: &types.Rank{
 			RankId:       profile.RankID,
-			RankShort:    types.RankType(profile.RankID).RankShort(),
+			RankShort:    types.RankShortFromTitle(profile.Rank.Title),
 			RankFull:     profile.Rank.Title,
 			RankImageUrl: profile.Rank.ImageURL(),
 		},
@@ -373,7 +373,7 @@ func (ds Mysql) generateS1UniformsProtoProfile(profile milpacs.Profile) (*types.
 			Username: profile.XfUser.Username,
 		},
 		Rank: &types.S1UniformsRank{
-			RankShort:    types.RankType(profile.RankID).RankShort(),
+			RankShort:    types.RankShortFromTitle(profile.Rank.Title),
 			RankFull:     profile.Rank.Title,
 			RankImageUrl: profile.Rank.ImageURL(),
 		},

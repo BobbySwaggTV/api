@@ -55,7 +55,7 @@ func (Profile) TableName() string {
 
 func (profile *Profile) UniformUrl() string {
 	imageGroup := math.Floor(float64(profile.RelationId / 1000))
-	return fmt.Sprintf("https://7cav.us/data/roster_uniforms/%d/%d.jpg", int(imageGroup), profile.RelationId)
+	return fmt.Sprintf("%s/data/roster_uniforms/%d/%d.jpg", forumBaseURL(), int(imageGroup), profile.RelationId)
 }
 
 type CustomFields struct {
