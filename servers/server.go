@@ -96,7 +96,13 @@ func setupDatasource() *datastores.Mysql {
 	}
 
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/xenforo?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort)
+	dbName := viper.GetString("db_name")
+	if dbName == "" {
+		dbName = "xenforo"
+	}
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort, dbName)
+
 	conn, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		Error.Println("issue connecting to database", err)
