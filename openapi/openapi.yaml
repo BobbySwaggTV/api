@@ -1,4 +1,4 @@
-# OpenAPI 3.1 reference for the 7Cav public HTTP API: read-only JSON over
+# OpenAPI 3.1 reference for the 15th MEU public HTTP API: read-only JSON over
 # HTTPS, with a bearer API key required on every endpoint.
 #
 # JSON conventions used throughout the responses below:
@@ -9,28 +9,27 @@
 #   - Enum fields are sent as their name; the unset value is *_UNSPECIFIED.
 openapi: 3.1.0
 info:
-  title: 7Cav API
+  title: 15th MEU API
   # Unknown query parameters are ignored on every operation rather than
   # rejected: a request with an undeclared parameter is accepted, not a 400.
   # Tooling that flags this is seeing intended behavior, not a defect.
   description: >-
-    Read-only access to 7Cav.us roster and forum data. All endpoints require a
+    Read-only access to 15th MEU roster and forum data. All endpoints require a
     bearer API key.
 
 
     ## Get your API key
 
 
-    Generate a key from the [7Cav API key
-    manager](https://7cav.us/account/api-key) (members only). Enter it in the
+    Obtain an API key from the 15th MEU API manager (members only). Enter it in the
     reference's authentication controls to try any endpoint. The docs send it as
-    `Authorization: Bearer <key>`, so enter only the raw `cav7_…` key.
+    `Authorization: Bearer <key>`, so enter only the raw API key.
   version: dev
 externalDocs:
-  description: 7Cav API Repository
-  url: https://github.com/7cav/api
+  description: 15th MEU API Repository
+  url: https://github.com/BobbySwaggTV/api
 servers:
-  - url: https://api.7cav.us
+  - url: https://api.15thmeu.org
 tags:
   - name: milpacs
     description: Milpac profiles, rosters, ranks, positions and AWOL tracking.

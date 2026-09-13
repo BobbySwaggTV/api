@@ -25,7 +25,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "api",
-	Short: "7Cav API",
+	Short: "15th MEU API",
 	Long:  `An HTTP/JSON service that serves core 7Cav data`,
 }
 

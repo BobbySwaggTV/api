@@ -141,7 +141,7 @@ func setupDatasource() *datastores.Mysql {
 }
 
 func (server *MicroServer) Start() {
-	Info.Println("Starting 7Cav API version:", version)
+	Info.Println("Starting 15th MEU API version:", version)
 
 	// Resolve and cache the trusted-proxy set (TRUSTED_PROXIES, ADR 0005) ONCE
 	// before any listener opens: rest.AuthMiddleware reads this cache to resolve
