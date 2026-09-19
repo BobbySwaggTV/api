@@ -759,6 +759,22 @@ func (ds Mysql) FindAwol() ([]*types.Awol, error) {
 	return awolList, nil
 }
 
+// apiKeyDigest returns the raw SHA-256 of the exact bearer token — the
+// byte-for-byte equivalent of the upstream issuer's
+// UNHEX(SHA2(<token>, 256)) stored in xf_cav7_api_key.key_hash. The
+// digest is computed in-process rather than in SQL so the raw bearer
+// token is never a bound query parameter: production runs GORM's
+// default logger (Warn level), which renders bound parameters into
+// process logs on SQL errors and slow queries — a string param would
+// have put the credential itself into those logs. A []byte param is
+// rendered as "<binary>" by GORM's ExplainSQL and, even where the
+// digest bytes happen to print, the digest is what the column stores —
+// not a usable credential.
+func apiKeyDigest(rawKey string) []byte {
+	sum := sha256.Sum256([]byte(rawKey))
+	return sum[:]
+}
+
 func (ds Mysql) ValidateApiKey(rawKey string) (*ApiKeyResult, error) {
 	var rows []struct {
 		KeyId     uint   `gorm:"column:key_id"`
@@ -770,9 +786,9 @@ func (ds Mysql) ValidateApiKey(rawKey string) (*ApiKeyResult, error) {
 		FROM   xf_cav7_api_key k
 		JOIN   xf_cav7_api_key_scope ks     ON ks.key_id   = k.key_id
 		JOIN   xf_cav7_api_key_scope_def sd ON sd.scope_id = ks.scope_id
-		WHERE  k.key_hash   = UNHEX(SHA2(?, 256))
+		WHERE  k.key_hash   = ?
 		  AND  k.is_active  = 1
-		  AND  sd.is_active = 1`, rawKey).Scan(&rows)
+		  AND  sd.is_active = 1`, apiKeyDigest(rawKey)).Scan(&rows)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

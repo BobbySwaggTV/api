@@ -86,9 +86,10 @@ func TestFixtures_MemberRelationsResolve(t *testing.T) {
 }
 
 // API-key fixtures must support both sides of bearer auth: the
-// well-known raw key resolves to active scopes through the same
-// UNHEX(SHA2(...)) shape the datastore uses, and revoked/inactive
-// material exists for the negative paths.
+// well-known raw key resolves to active scopes — the seeded
+// UNHEX(SHA2(...)) hashes equal the crypto/sha256 digest the datastore
+// computes in-process — and revoked/inactive material exists for the
+// negative paths.
 func TestFixtures_ApiKeysResolveScopes(t *testing.T) {
 	db, _ := testdb.Open(t)
 
