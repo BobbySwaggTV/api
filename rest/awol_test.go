@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/rest"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/rest"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

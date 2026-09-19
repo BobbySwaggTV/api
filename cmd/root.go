@@ -26,7 +26,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "api",
 	Short: "15th MEU API",
-	Long:  `An HTTP/JSON service that serves core 7Cav data`,
+	Long:  `An HTTP/JSON service that serves core 15th MEU data`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

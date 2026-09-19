@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -28,7 +28,7 @@ func TestRankExpanded_WireForm(t *testing.T) {
 	m := marshalToMap(t, types.RankExpanded{
 		RankShort:        "MG",
 		RankFull:         "Major General",
-		RankImageUrl:     "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618",
+		RankImageUrl:     "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618",
 		RankId:           4,
 		RankDisplayOrder: 4,
 	})
@@ -36,7 +36,7 @@ func TestRankExpanded_WireForm(t *testing.T) {
 	assert.Equal(t, map[string]any{
 		"rankShort":        "MG",
 		"rankFull":         "Major General",
-		"rankImageUrl":     "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618",
+		"rankImageUrl":     "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618",
 		"rankId":           "4", // 64-bit int: decimal-string wire form
 		"rankDisplayOrder": float64(4),
 	}, m)

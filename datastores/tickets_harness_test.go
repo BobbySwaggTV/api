@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
@@ -301,7 +301,7 @@ func TestListTickets_ForumUrlFromConfiguredBase(t *testing.T) {
 func TestGetTicket_ByIdHappyPath(t *testing.T) {
 	ds, rc := openTicketsHarness(t)
 
-	ticket, err := ds.GetTicket(context.Background(), rc, 1, "https://7cav.us")
+	ticket, err := ds.GetTicket(context.Background(), rc, 1, "https://15thmeu.org")
 	if err != nil {
 		t.Fatalf("GetTicket(1): %v", err)
 	}
@@ -311,7 +311,7 @@ func TestGetTicket_ByIdHappyPath(t *testing.T) {
 	if ticket.StatusName != "Awaiting Support" {
 		t.Errorf("StatusName = %q, want Awaiting Support", ticket.StatusName)
 	}
-	if ticket.ForumUrl != "https://7cav.us/tickets/AA-0001/" {
+	if ticket.ForumUrl != "https://15thmeu.org/tickets/AA-0001/" {
 		t.Errorf("ForumUrl = %q", ticket.ForumUrl)
 	}
 	if len(ticket.Participants) != 2 {
@@ -354,14 +354,14 @@ func TestGetTicket_UnknownIdIsRecordNotFound(t *testing.T) {
 func TestGetTicketByRef(t *testing.T) {
 	ds, rc := openTicketsHarness(t)
 
-	ticket, err := ds.GetTicketByRef(context.Background(), rc, "AA-0001", "https://7cav.us")
+	ticket, err := ds.GetTicketByRef(context.Background(), rc, "AA-0001", "https://15thmeu.org")
 	if err != nil {
 		t.Fatalf("GetTicketByRef(AA-0001): %v", err)
 	}
 	if ticket.TicketId != 1 {
 		t.Errorf("TicketId = %d, want 1", ticket.TicketId)
 	}
-	if ticket.ForumUrl != "https://7cav.us/tickets/AA-0001/" {
+	if ticket.ForumUrl != "https://15thmeu.org/tickets/AA-0001/" {
 		t.Errorf("ForumUrl = %q", ticket.ForumUrl)
 	}
 

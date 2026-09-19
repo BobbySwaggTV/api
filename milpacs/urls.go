@@ -9,7 +9,7 @@ import (
 func forumBaseURL() string {
 	baseURL := viper.GetString("FORUM_BASE_URL")
 	if baseURL == "" {
-		baseURL = "https://7cav.us"
+		baseURL = "https://15thmeu.org"
 	}
 
 	return strings.TrimRight(baseURL, "/")

@@ -3,8 +3,8 @@ package rest
 import (
 	"net/http"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/types"
 )
 
 // getPositionGroups serves GET /api/v1/milpacs/position/groups: the position

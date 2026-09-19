@@ -42,7 +42,7 @@ func TestMarshalCanonical_SortsKeysAndIsWhitespaceStable(t *testing.T) {
 }
 
 func TestMarshalCanonical_DoesNotEscapeHTML(t *testing.T) {
-	v, err := canonicalize([]byte(`{"url":"https://7cav.us/a?x=1&y=2"}`))
+	v, err := canonicalize([]byte(`{"url":"https://15thmeu.org/a?x=1&y=2"}`))
 	require.NoError(t, err)
 	assert.Contains(t, string(marshalCanonical(v)), "x=1&y=2",
 		"URLs must stay readable; no \\u0026 escaping")

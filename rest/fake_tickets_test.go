@@ -16,8 +16,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/types"
 	"gorm.io/gorm"
 )
 
@@ -57,7 +57,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          1,
 			TotalMessageCount:   2,
 			CustomFields:        map[string]string{"department": "S1", "billet": "Rifleman"},
-			ForumUrl:            "https://7cav.us/tickets/ZZTOP44Q/",
+			ForumUrl:            "https://15thmeu.org/tickets/ZZTOP44Q/",
 		},
 		{
 			TicketId:            43,
@@ -83,7 +83,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          0,
 			TotalMessageCount:   1,
 			CustomFields:        map[string]string{},
-			ForumUrl:            "https://7cav.us/tickets/QQWW43RR/",
+			ForumUrl:            "https://15thmeu.org/tickets/QQWW43RR/",
 		},
 		{
 			TicketId:            42,
@@ -111,7 +111,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          2,
 			TotalMessageCount:   3,
 			CustomFields:        map[string]string{"recruiter": "Jarvis.A"},
-			ForumUrl:            "https://7cav.us/tickets/MF1UI9HE/",
+			ForumUrl:            "https://15thmeu.org/tickets/MF1UI9HE/",
 		},
 	}
 }
@@ -125,7 +125,7 @@ func seedMessages42() []*types.Message {
 			UserId:       8,
 			Username:     "John.Doe",
 			MessageDate:  1748400000,
-			Message:      "[B]Enlistment[/B] request — I'd like to join the 7th Cavalry & start ASAP <o7>",
+			Message:      "[B]Enlistment[/B] request — I'd like to join the 15th MEU & start ASAP <o7>",
 			MessageState: "visible",
 			Position:     0,
 			AttachCount:  0,

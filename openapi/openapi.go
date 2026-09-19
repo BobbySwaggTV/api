@@ -4,7 +4,7 @@ import "embed"
 
 // Files holds the Scalar docs shell and its static assets served at the docs
 // URLs: the shell (assets/index.html), the vendored Scalar standalone bundle
-// (assets/scalar.standalone.js), and the 7Cav theme (assets/theme.css). The
+// (assets/scalar.standalone.js), and the 15th MEU theme (assets/theme.css). The
 // renderer is pinned and vendored — see assets/VENDOR.md for the version,
 // source URL, and re-vendor command; there is no runtime CDN request.
 //

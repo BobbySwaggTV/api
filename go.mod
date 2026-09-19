@@ -1,4 +1,4 @@
-module github.com/7cav/api
+module github.com/BobbySwaggTV/api
 
 go 1.25.10
 

@@ -1,6 +1,5 @@
-/* 7Cav docs theme: dark charcoal with the cavalry-gold accent, mapped onto
-   Scalar's CSS variables. The palette is lifted from 7cav.us's compiled
-   XenForo CSS so the docs read as part of the community site. */
+/* 15th MEU docs theme: dark charcoal with a gold accent, mapped onto
+   Scalar's CSS variables. Palette retained from the upstream community theme. */
 :root,
 .dark-mode {
   --scalar-color-accent: #ebc729;

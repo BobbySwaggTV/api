@@ -20,9 +20,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/referencecache"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/referencecache"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/spf13/viper"

@@ -9,7 +9,7 @@ package rest_test
 // one AWOL row).
 
 import (
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/types"
 )
 
 func (f *fakeDatastore) FindAllPositionGroups() ([]*types.PositionGroup, error) {

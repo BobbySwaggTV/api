@@ -2,12 +2,15 @@ package datastores_test
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/testdb"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/testdb"
 	gormmysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

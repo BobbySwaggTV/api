@@ -19,7 +19,7 @@
 package cmd
 
 import (
-	"github.com/7cav/api/servers"
+	"github.com/BobbySwaggTV/api/servers"
 	"github.com/spf13/cobra"
 )
 

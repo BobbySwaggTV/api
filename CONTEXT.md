@@ -1,6 +1,6 @@
 # Context
 
-Domain language used by the 7Cav API. The contract is a trio that is
+Domain language used by the 15th MEU API. The contract is a trio that is
 checked in and CI-enforced, not a generated artifact: the **types
 package** (`types/`, the hand-written wire types), the **hand-owned
 OpenAPI 3.1 spec** (`openapi/openapi.yaml`), and the **golden corpus**
@@ -24,7 +24,7 @@ maps them to its own Go types (the `types` package).
 
 A "milpac" is a member's military-personnel-record entry: rank,
 position, awards, service record, and the identifiers used to look them
-up across the wider 7Cav stack. `MilpacService` is the surface that
+up across the wider 15th MEU stack. `MilpacService` is the surface that
 serves them.
 
 ## Profile shapes
@@ -87,7 +87,7 @@ Served by the AWOL route, used by status-tracking consumers.
 
 ## Connected accounts
 
-Members are looked up by 7Cav user id, by username, and by external
+Members are looked up by 15th MEU user id, by username, and by external
 account identifiers maintained by the forum's connected-account
 integrations:
 

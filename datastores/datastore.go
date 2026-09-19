@@ -24,8 +24,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/7cav/api/referencecache"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/referencecache"
+	"github.com/BobbySwaggTV/api/types"
 )
 
 var (

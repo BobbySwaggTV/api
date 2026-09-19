@@ -37,7 +37,7 @@ import (
 	"github.com/pb33f/libopenapi-validator/responses"
 	"github.com/pb33f/libopenapi-validator/schema_validation"
 
-	"github.com/7cav/api/internal/spectest"
+	"github.com/BobbySwaggTV/api/internal/spectest"
 )
 
 const specPath = "../openapi/openapi.yaml"

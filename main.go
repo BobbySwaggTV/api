@@ -18,7 +18,7 @@
 
 package main
 
-import "github.com/7cav/api/cmd"
+import "github.com/BobbySwaggTV/api/cmd"
 
 func main() {
 	cmd.Execute()

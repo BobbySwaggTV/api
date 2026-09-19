@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/rest"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/rest"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -106,7 +106,7 @@ func TestNewStack_SearchSparseLiteProfilePreservesNils(t *testing.T) {
 	h := rest.New(&fakeDatastore{findProfilesByPosition: func(string) (*types.LiteRoster, error) {
 		return &types.LiteRoster{Profiles: map[uint64]*types.LiteProfile{2: {
 			RealName:        "John Doe",
-			UniformUrl:      "https://7cav.us/data/roster_uniforms/0/2.jpg",
+			UniformUrl:      "https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 			Roster:          types.RosterTypeCombat,
 			Secondaries:     []*types.Position{},
 			JoinDate:        "2026-01-15",
@@ -121,7 +121,7 @@ func TestNewStack_SearchSparseLiteProfilePreservesNils(t *testing.T) {
 		"user":null,
 		"rank":null,
 		"realName":"John Doe",
-		"uniformUrl":"https://7cav.us/data/roster_uniforms/0/2.jpg",
+		"uniformUrl":"https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 		"roster":"ROSTER_TYPE_COMBAT",
 		"primary":null,
 		"secondaries":[],

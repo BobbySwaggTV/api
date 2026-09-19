@@ -11,9 +11,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/rest"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/rest"
+	"github.com/BobbySwaggTV/api/types"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/common/expfmt"
 	"github.com/prometheus/common/model"

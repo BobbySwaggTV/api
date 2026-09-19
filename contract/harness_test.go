@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/referencecache"
-	"github.com/7cav/api/rest"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/referencecache"
+	"github.com/BobbySwaggTV/api/rest"
 )
 
 // Compile-time guarantee the recording fake implements the full interface.

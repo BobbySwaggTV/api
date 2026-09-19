@@ -21,11 +21,11 @@ RUN go mod tidy
 
 # VERSION is supplied by the release workflow via --build-arg from
 # the GitHub release tag (`github.ref_name`). Defaults to "dev" for
-# local docker builds so `Starting 7Cav API version:` shows something
+# local docker builds so `Starting 15th MEU API version:` shows something
 # meaningful even without the tag flow. It is also stamped onto the
 # served OpenAPI spec's info.version at request time (rest.DocsHandler).
 ARG VERSION=dev
-RUN go build -a -ldflags="-s -w -X github.com/7cav/api/servers.version=${VERSION}" -installsuffix cgo -o /api
+RUN go build -a -ldflags="-s -w -X github.com/BobbySwaggTV/api/servers.version=${VERSION}" -installsuffix cgo -o /api
 
 # Production stage
 FROM alpine:latest

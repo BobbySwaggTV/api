@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/rest"
+	"github.com/BobbySwaggTV/api/rest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -72,13 +72,13 @@ func TestDocsHandler_ServesScalarShell(t *testing.T) {
 	assert.Contains(t, body, "openapi.yaml",
 		"the shell must load the hand-owned 3.1 spec")
 	assert.Contains(t, body, "theme.css",
-		"the shell must link the 7Cav theme")
+		"the shell must link the 15th MEU theme")
 }
 
 // The shipped shell disables Scalar's hosted "Ask AI" assistant: the
 // agent-disabled flag is present and is not flipped back on. The assistant is
 // the only part of Scalar that would phone home, so this is the durable guard
-// for "nothing on the docs page leaves 7Cav infrastructure".
+// for "nothing on the docs page leaves 15th MEU infrastructure".
 func TestDocsHandler_DocsShellDisablesHostedAgent(t *testing.T) {
 	h := rest.DocsHandler("dev")
 

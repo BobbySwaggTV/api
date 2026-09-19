@@ -904,9 +904,9 @@ components:
       type: http
       scheme: bearer
       description: >-
-        7Cav API key (cav7_…), sent as `Authorization: Bearer <key>`.
+        15th MEU API key (cav7_…), sent as `Authorization: Bearer <key>`.
         Members generate a key from the API key manager at
-        https://7cav.us/account/api-key.
+        https://15thmeu.org/account/api-key.
         Requests without the Bearer scheme receive a plain-text 401 naming
         the expected header form; unknown keys receive a generic plain-text
         401; valid keys lacking the operation's scope receive a JSON 403.

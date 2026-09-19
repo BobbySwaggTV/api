@@ -5,7 +5,7 @@
       {
         "awardDate": "2021-03-01",
         "awardDetails": "For technical excellence & dedication <est. 2014>",
-        "awardImageUrl": "https://7cav.us/data/awards/ccm.jpg",
+        "awardImageUrl": "https://15thmeu.org/data/awards/ccm.jpg",
         "awardName": "Commendation Medal",
         "awardUid": "901"
       }
@@ -23,7 +23,7 @@
     "rank": {
       "rankFull": "Major General",
       "rankId": "4",
-      "rankImageUrl": "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618",
+      "rankImageUrl": "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618",
       "rankShort": "MG"
     },
     "realName": "Adam Jarvis",
@@ -48,7 +48,7 @@
         "positionTitle": "S6 Web Developer"
       }
     ],
-    "uniformUrl": "https://7cav.us/data/roster_uniforms/0/1.jpg",
+    "uniformUrl": "https://15thmeu.org/data/roster_uniforms/0/1.jpg",
     "user": {
       "userId": "3",
       "username": "Jarvis.A"

@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/contract"
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/referencecache"
-	"github.com/7cav/api/rest"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/contract"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/referencecache"
+	"github.com/BobbySwaggTV/api/rest"
+	"github.com/BobbySwaggTV/api/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
@@ -114,8 +114,8 @@ func (f *fakeDatastore) FindAllRanks() ([]*types.RankExpanded, error) {
 		return f.findAllRanks()
 	}
 	return []*types.RankExpanded{
-		{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618", RankId: 4, RankDisplayOrder: 4},
-		{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg", RankId: 22, RankDisplayOrder: 22},
+		{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618", RankId: 4, RankDisplayOrder: 4},
+		{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg", RankId: 22, RankDisplayOrder: 22},
 	}, nil
 }
 
@@ -132,11 +132,11 @@ func seedJarvis() *types.Profile {
 		Rank: &types.Rank{
 			RankShort:    "MG",
 			RankFull:     "Major General",
-			RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618",
+			RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618",
 			RankId:       4,
 		},
 		RealName:   "Adam Jarvis",
-		UniformUrl: "https://7cav.us/data/roster_uniforms/0/1.jpg",
+		UniformUrl: "https://15thmeu.org/data/roster_uniforms/0/1.jpg",
 		Roster:     types.RosterTypeCombat,
 		Primary:    &types.Position{PositionTitle: "Regimental Technical Aide", PositionId: 773},
 		Secondaries: []*types.Position{
@@ -161,7 +161,7 @@ func seedJarvis() *types.Profile {
 				AwardDetails:  "For technical excellence & dedication <est. 2014>",
 				AwardName:     "Commendation Medal",
 				AwardDate:     "2021-03-01",
-				AwardImageUrl: "https://7cav.us/data/awards/ccm.jpg",
+				AwardImageUrl: "https://15thmeu.org/data/awards/ccm.jpg",
 				AwardUid:      901,
 			},
 		},
@@ -180,9 +180,9 @@ func seedJarvis() *types.Profile {
 func seedDoe() *types.Profile {
 	return &types.Profile{
 		User:            &types.User{UserId: 8, Username: "John.Doe"},
-		Rank:            &types.Rank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg", RankId: 22},
+		Rank:            &types.Rank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg", RankId: 22},
 		RealName:        "John Doe",
-		UniformUrl:      "https://7cav.us/data/roster_uniforms/0/2.jpg",
+		UniformUrl:      "https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 		Roster:          types.RosterTypeCombat,
 		Primary:         nil, // → "primary": null
 		Secondaries:     []*types.Position{},

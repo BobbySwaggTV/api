@@ -24,7 +24,7 @@ import (
 	"log"
 	"math"
 
-	"github.com/7cav/api/xenforo"
+	"github.com/BobbySwaggTV/api/xenforo"
 )
 
 type Profile struct {

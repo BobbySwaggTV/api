@@ -31,7 +31,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/7cav/api/contract"
+	"github.com/BobbySwaggTV/api/contract"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

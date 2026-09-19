@@ -9,7 +9,7 @@ package rest
 // which renders the hand-owned OpenAPI 3.1 spec natively (#215; the prior
 // Swagger UI bundle predated 3.1 and rejected the document). The shell
 // (assets/index.html) mounts Scalar against the served spec with the hosted
-// "Ask AI" assistant disabled, so nothing on the docs page leaves 7Cav
+// "Ask AI" assistant disabled, so nothing on the docs page leaves 15th MEU
 // infrastructure.
 //
 // Phase 4 (#135) retired the generated Swagger 2.0 *.swagger.json files. The
@@ -31,7 +31,7 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/7cav/api/openapi"
+	"github.com/BobbySwaggTV/api/openapi"
 )
 
 // specURLPath is where the OpenAPI 3.1 document is served. The docs shell

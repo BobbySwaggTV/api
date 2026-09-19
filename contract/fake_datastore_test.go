@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/types"
 	"gorm.io/gorm"
 )
 
@@ -68,11 +68,11 @@ func seedJarvis() *types.Profile {
 		Rank: &types.Rank{
 			RankShort:    "MG",
 			RankFull:     "Major General",
-			RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618",
+			RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618",
 			RankId:       4,
 		},
 		RealName:   "Adam Jarvis",
-		UniformUrl: "https://7cav.us/data/roster_uniforms/0/1.jpg",
+		UniformUrl: "https://15thmeu.org/data/roster_uniforms/0/1.jpg",
 		Roster:     types.RosterTypeCombat,
 		Primary:    &types.Position{PositionTitle: "Regimental Technical Aide", PositionId: 773},
 		Secondaries: []*types.Position{
@@ -97,7 +97,7 @@ func seedJarvis() *types.Profile {
 				AwardDetails:  "For technical excellence & dedication <est. 2014>",
 				AwardName:     "Commendation Medal",
 				AwardDate:     "2021-03-01",
-				AwardImageUrl: "https://7cav.us/data/awards/ccm.jpg",
+				AwardImageUrl: "https://15thmeu.org/data/awards/ccm.jpg",
 				AwardUid:      901,
 			},
 		},
@@ -116,9 +116,9 @@ func seedJarvis() *types.Profile {
 func seedDoe() *types.Profile {
 	return &types.Profile{
 		User:            &types.User{UserId: 8, Username: "John.Doe"},
-		Rank:            &types.Rank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg", RankId: 22},
+		Rank:            &types.Rank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg", RankId: 22},
 		RealName:        "John Doe",
-		UniformUrl:      "https://7cav.us/data/roster_uniforms/0/2.jpg",
+		UniformUrl:      "https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 		Roster:          types.RosterTypeCombat,
 		Primary:         nil, // → "primary": null
 		Secondaries:     []*types.Position{},
@@ -233,9 +233,9 @@ func (recordingDatastore) FindS1UniformsRosterByType(t types.RosterType) (*types
 	return &types.S1UniformsRoster{Profiles: map[uint64]*types.S1UniformsProfile{
 		1: {
 			User:                     &types.User{UserId: 3, Username: "Jarvis.A"},
-			Rank:                     &types.S1UniformsRank{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618"},
+			Rank:                     &types.S1UniformsRank{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618"},
 			RealName:                 "Adam Jarvis",
-			UniformUrl:               "https://7cav.us/data/roster_uniforms/0/1.jpg",
+			UniformUrl:               "https://15thmeu.org/data/roster_uniforms/0/1.jpg",
 			UniformDate:              "2025-11-02",
 			UniformUpdateTriggerDate: "2025-12-01",
 			Roster:                   types.RosterTypeCombat,
@@ -247,9 +247,9 @@ func (recordingDatastore) FindS1UniformsRosterByType(t types.RosterType) (*types
 		},
 		2: {
 			User:                 &types.User{UserId: 8, Username: "John.Doe"},
-			Rank:                 &types.S1UniformsRank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg"},
+			Rank:                 &types.S1UniformsRank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg"},
 			RealName:             "John Doe",
-			UniformUrl:           "https://7cav.us/data/roster_uniforms/0/2.jpg",
+			UniformUrl:           "https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 			Roster:               types.RosterTypeCombat,
 			PrimaryPositionTitle: "Rifleman",
 			Secondaries:          []*types.S1UniformsPosition{},
@@ -270,8 +270,8 @@ func (recordingDatastore) FindProfilesByPosition(positionQuery string) (*types.L
 
 func (recordingDatastore) FindAllRanks() ([]*types.RankExpanded, error) {
 	return []*types.RankExpanded{
-		{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618", RankId: 4, RankDisplayOrder: 4},
-		{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg", RankId: 22, RankDisplayOrder: 22},
+		{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618", RankId: 4, RankDisplayOrder: 4},
+		{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg", RankId: 22, RankDisplayOrder: 22},
 	}, nil
 }
 
@@ -356,7 +356,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          1,
 			TotalMessageCount:   2,
 			CustomFields:        map[string]string{"department": "S1", "billet": "Rifleman"},
-			ForumUrl:            "https://7cav.us/tickets/ZZTOP44Q/",
+			ForumUrl:            "https://15thmeu.org/tickets/ZZTOP44Q/",
 		},
 		{
 			TicketId:            43,
@@ -382,7 +382,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          0,
 			TotalMessageCount:   1,
 			CustomFields:        map[string]string{},
-			ForumUrl:            "https://7cav.us/tickets/QQWW43RR/",
+			ForumUrl:            "https://15thmeu.org/tickets/QQWW43RR/",
 		},
 		{
 			TicketId:            42,
@@ -410,7 +410,7 @@ func seedTickets() []*types.Ticket {
 			ReplyCount:          2,
 			TotalMessageCount:   3,
 			CustomFields:        map[string]string{"recruiter": "Jarvis.A"},
-			ForumUrl:            "https://7cav.us/tickets/MF1UI9HE/",
+			ForumUrl:            "https://15thmeu.org/tickets/MF1UI9HE/",
 		},
 	}
 }
@@ -424,7 +424,7 @@ func seedMessages42() []*types.Message {
 			UserId:       8,
 			Username:     "John.Doe",
 			MessageDate:  1748400000,
-			Message:      "[B]Enlistment[/B] request — I'd like to join the 7th Cavalry & start ASAP <o7>",
+			Message:      "[B]Enlistment[/B] request — I'd like to join the 15th MEU & start ASAP <o7>",
 			MessageState: "visible",
 			Position:     0,
 			AttachCount:  0,

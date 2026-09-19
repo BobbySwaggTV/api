@@ -1,4 +1,4 @@
-# Prod-shaped template — mirrors the live `7cav-api` stack.
+# Production template for the `15th-meu-api` stack.
 #
 # Prerequisites for `docker compose up`:
 #   - A `xenforo` stack is already running (provides `xenforo-db` on
@@ -12,8 +12,8 @@ services:
     build:
       dockerfile: "Dockerfile"
       context: "./"
-    image: 7cav/api:latest
-    container_name: 7cav-api
+    image: 15th-meu-api:latest
+    container_name: 15th-meu-api
     labels:
       - com.centurylinklabs.watchtower.enable=true
     networks:
@@ -31,7 +31,7 @@ services:
       DB_PORT: 3306
       DB_NAME: xenforo
       # Optional — populates Ticket.forum_url; empty if unset.
-      # FORUM_BASE_URL: https://7cav.us
+      # FORUM_BASE_URL: https://15thmeu.org
       # Optional — refresh interval for the in-memory ticket reference cache; defaults to 15m.
       # REFERENCE_CACHE_REFRESH_INTERVAL: 15m
       # Optional — enables errors-only Sentry capture (#118). The DSN lives only

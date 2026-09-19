@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/types"
 )
 
 // dateTime mirrors the lite/uniform timestamp convention: unix rendered
@@ -367,7 +367,7 @@ func TestFindAllRanks_OrderedCatalog(t *testing.T) {
 	if ranks[1].RankShort != "MSG" {
 		t.Errorf("rank 15 short = %q, want MSG", ranks[1].RankShort)
 	}
-	if ranks[0].RankImageUrl != "https://7cav.us/data/roster_ranks/0/5.jpg?5" {
+	if ranks[0].RankImageUrl != "https://15thmeu.org/data/roster_ranks/0/5.jpg?5" {
 		t.Errorf("RankImageUrl = %q", ranks[0].RankImageUrl)
 	}
 	if ranks[0].RankDisplayOrder != 50 {

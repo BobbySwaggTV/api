@@ -28,16 +28,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/7cav/api/datastores"
-	"github.com/7cav/api/referencecache"
-	"github.com/7cav/api/rest"
+	"github.com/BobbySwaggTV/api/datastores"
+	"github.com/BobbySwaggTV/api/referencecache"
+	"github.com/BobbySwaggTV/api/rest"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 // version is overridden at build time via -ldflags
-// "-X github.com/7cav/api/servers.version=<tag>" in the release workflow.
+// "-X github.com/BobbySwaggTV/api/servers.version=<tag>" in the release workflow.
 // Local dev builds report "dev". It stamps the Sentry release and the served
 // OpenAPI spec's info.version.
 var version = "dev"

@@ -1,7 +1,7 @@
 package rest_test
 
 import (
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/types"
 )
 
 // Roster seeds for the golden replay, mirroring the recording seed
@@ -95,9 +95,9 @@ func seedDoeLite() *types.LiteProfile {
 func seedJarvisS1Uniforms() *types.S1UniformsProfile {
 	return &types.S1UniformsProfile{
 		User:                     &types.User{UserId: 3, Username: "Jarvis.A"},
-		Rank:                     &types.S1UniformsRank{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://7cav.us/data/roster_ranks/0/4.jpg?1741364618"},
+		Rank:                     &types.S1UniformsRank{RankShort: "MG", RankFull: "Major General", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/4.jpg?1741364618"},
 		RealName:                 "Adam Jarvis",
-		UniformUrl:               "https://7cav.us/data/roster_uniforms/0/1.jpg",
+		UniformUrl:               "https://15thmeu.org/data/roster_uniforms/0/1.jpg",
 		UniformDate:              "2025-11-02",
 		UniformUpdateTriggerDate: "2025-12-01",
 		Roster:                   types.RosterTypeCombat,
@@ -112,9 +112,9 @@ func seedJarvisS1Uniforms() *types.S1UniformsProfile {
 func seedDoeS1Uniforms() *types.S1UniformsProfile {
 	return &types.S1UniformsProfile{
 		User:                 &types.User{UserId: 8, Username: "John.Doe"},
-		Rank:                 &types.S1UniformsRank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://7cav.us/data/roster_ranks/0/22.jpg"},
+		Rank:                 &types.S1UniformsRank{RankShort: "PVT", RankFull: "Private", RankImageUrl: "https://15thmeu.org/data/roster_ranks/0/22.jpg"},
 		RealName:             "John Doe",
-		UniformUrl:           "https://7cav.us/data/roster_uniforms/0/2.jpg",
+		UniformUrl:           "https://15thmeu.org/data/roster_uniforms/0/2.jpg",
 		Roster:               types.RosterTypeCombat,
 		PrimaryPositionTitle: "Rifleman",
 		Secondaries:          []*types.S1UniformsPosition{},

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/7cav/api/types"
+	"github.com/BobbySwaggTV/api/types"
 	"gorm.io/gorm"
 )
 
@@ -67,10 +67,10 @@ func TestFindProfilesById_ReturnsFullProfileShape(t *testing.T) {
 	if got.Rank.RankId != 24 || got.Rank.RankFull != "Specialist" {
 		t.Errorf("Rank = id %d %q, want 24 %q", got.Rank.RankId, got.Rank.RankFull, "Specialist")
 	}
-	if got.Rank.RankImageUrl != "https://7cav.us/data/roster_ranks/0/24.jpg?24" {
+	if got.Rank.RankImageUrl != "https://15thmeu.org/data/roster_ranks/0/24.jpg?24" {
 		t.Errorf("RankImageUrl = %q", got.Rank.RankImageUrl)
 	}
-	if got.UniformUrl != "https://7cav.us/data/roster_uniforms/0/205.jpg" {
+	if got.UniformUrl != "https://15thmeu.org/data/roster_uniforms/0/205.jpg" {
 		t.Errorf("UniformUrl = %q", got.UniformUrl)
 	}
 	if got.Roster != types.RosterTypeCombat {
@@ -133,7 +133,7 @@ func TestFindProfilesById_ReturnsFullProfileShape(t *testing.T) {
 	if award.AwardDate != isoDate(1711000000) {
 		t.Errorf("AwardDate = %q, want %q", award.AwardDate, isoDate(1711000000))
 	}
-	if award.AwardImageUrl != "https://7cav.us/data/roster_awards/0/1.jpg?1" {
+	if award.AwardImageUrl != "https://15thmeu.org/data/roster_awards/0/1.jpg?1" {
 		t.Errorf("AwardImageUrl = %q", award.AwardImageUrl)
 	}
 

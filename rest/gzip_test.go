@@ -30,7 +30,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/7cav/api/rest"
+	"github.com/BobbySwaggTV/api/rest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -101,7 +101,7 @@ func TestGzip_NonNegotiatedRequestFlushesPlain(t *testing.T) {
 // so the corruption is invisible to the handler. Regression pin vs pre-#167,
 // where the same handler got a loud ErrNotSupported with zero bytes moved.
 func TestGzip_FlushBeforeFirstWriteStripsStaleContentLength(t *testing.T) {
-	const payload = `{"roster":"live","unit":"7th Cavalry","status":"active"}`
+	const payload = `{"roster":"live","unit":"15th MEU","status":"active"}`
 
 	flushErr := make(chan error, 1) // handler runs on the server goroutine
 	writeErr := make(chan error, 1)
@@ -149,7 +149,7 @@ func TestGzip_FlushBeforeFirstWriteStripsStaleContentLength(t *testing.T) {
 // recorder-based gzip round-trip test were removed at the #134 cutover, so this
 // is now the sole pin).
 func TestGzip_FirstWriteStripsStaleContentLength(t *testing.T) {
-	const payload = `{"roster":"live","unit":"7th Cavalry","status":"active"}`
+	const payload = `{"roster":"live","unit":"15th MEU","status":"active"}`
 
 	writeErr := make(chan error, 1) // handler runs on the server goroutine
 	h := rest.GzipMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -203,7 +203,7 @@ func TestGzip_FirstWriteStripsStaleContentLength(t *testing.T) {
 // file-serving handlers (http.FileServer/ServeContent set Content-Length)
 // behind this middleware.
 func TestGzip_WriteHeaderStripsStaleContentLength(t *testing.T) {
-	const payload = `{"roster":"live","unit":"7th Cavalry","status":"active"}`
+	const payload = `{"roster":"live","unit":"15th MEU","status":"active"}`
 
 	writeErr := make(chan error, 1) // handler runs on the server goroutine
 	h := rest.GzipMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

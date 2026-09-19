@@ -1,10 +1,11 @@
-<p align="center"><img src="https://github.com/7Cav/api/blob/develop/logo.png"></p>
+# 15th MEU API
 
-# Cav API
-
-An HTTP/JSON API that serves 7Cav community and roster data. It is a read
+An HTTP/JSON API that serves 15th MEU community and roster data. It is a read
 layer over the forum's MySQL database, written in Go on the standard
 library `net/http` stack.
+
+Repository: [BobbySwaggTV/api](https://github.com/BobbySwaggTV/api), branch
+`feature/15th-meu`. The community forum is [15th MEU](https://15thmeu.org).
 
 ## Clients
 
@@ -20,7 +21,7 @@ Authorization: Bearer <your token>
 
 ### HTTP/JSON
 
-The interactive documentation lives at [api.7cav.us](https://api.7cav.us).
+The interactive documentation lives at [api.15thmeu.org](https://api.15thmeu.org).
 
 > To try the API from the docs page, click the `Authorize` button at the
 > top and paste your bearer token.
@@ -34,7 +35,7 @@ const axios = require('axios');
 const token = "<your token>";
 
 const client = axios.create({
-  baseURL: 'https://api.7cav.us/api/v1',
+  baseURL: 'https://api.15thmeu.org/api/v1',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -67,7 +68,7 @@ func main() {
         TokenType:   "Bearer",
     }))
 
-    res, err := client.Get("https://api.7cav.us/api/v1/milpacs/profile/id/1")
+    res, err := client.Get("https://api.15thmeu.org/api/v1/milpacs/profile/id/1")
     if err != nil {
         panic(err)
     }
@@ -80,7 +81,7 @@ func main() {
 The service runs as a single public listener that serves the whole `/api`
 surface plus the documentation UI. There is no second port and no gRPC: an
 earlier version split the process into a gRPC server and a generated
-HTTP/JSON gateway, but that design was retired in [PRD #112][prd]
+HTTP/JSON gateway, but that design was retired in upstream [PRD #112][prd]
 ("Goodbye gRPC"). See [ADR 0006][adr6] for why.
 
 The contract is checked into the repo, not generated:
@@ -106,7 +107,7 @@ the single HTTP listener. The `docker-compose.yaml` in this repo is a
 prod-shaped template; the live compose file is customized and kept out of
 the repo.
 
-You need a copy of the 7Cav XenForo database reachable from the container
+You need a copy of the 15th MEU XenForo database reachable from the container
 (see the `DB_*` environment variables in `docker-compose.yaml`). Then:
 
 ```shell
@@ -115,16 +116,24 @@ docker compose up -d
 
 ## Development
 
-With Go installed you can build and run the API directly. There is no code
+With Go 1.25.10 or newer installed you can build and run the API directly. There is no code
 generation or tooling install step:
 
 ```shell
+git clone --branch feature/15th-meu https://github.com/BobbySwaggTV/api.git
+cd api
+go mod download
 go build ./...
 go run main.go serve
 ```
 
 `go run main.go serve` needs the database environment variables set (see
-`docker-compose.yaml` for the full list).
+`docker-compose.yaml` for the full list). Set `DB_HOST`, `DB_PORT`,
+`DB_USERNAME`, `DB_PASSWORD`, and `DB_NAME` for a local development database,
+and `FORUM_BASE_URL=https://15thmeu.org` for forum links. The HTTP listener
+is on port 11000; local interactive docs are at http://localhost:11000.
+The compose template builds the local `15th-meu-api:latest` image and expects
+the external networks and database described in its prerequisites.
 
 ### Tests
 
@@ -143,3 +152,18 @@ Wire types → handler → route registration → spec operation → goldens. Th
 spec and golden steps are CI-enforced. The full checklist is in
 [`CONTEXT.md`](CONTEXT.md); the in-code long form is in the package docs of
 `rest/rest.go` and `types/types.go`.
+
+## Upstream attribution and migration status
+
+This project derives from [7Cav API](https://github.com/7Cav/api). Original
+copyright and GPL notices are retained; see [LICENSE](LICENSE). Historical
+architecture decisions retain upstream references. API-key prefixes and
+database table names remain unchanged for compatibility in this phase.
+
+The release workflow still references the upstream Docker Hub repository and
+watcher endpoint. Confirm the 15th MEU publication repository and deployment
+watcher before publishing a release; no replacement has been assumed.
+The existing reservist-group title is an exact database lookup used to return
+`Reserve`, so it is functional legacy compatibility, not a branding-only
+label. It remains unchanged in this phase, along with all hierarchy and
+roster logic; any later migration requires a confirmed group title.
