@@ -158,6 +158,75 @@ func TestFixtures_RevokedAPIKeyResolvesToInactiveRow(t *testing.T) {
 	}
 }
 
+// The auth-variant keys are duplicated raw strings like RevokedAPIKey
+// (constants in testdb.go, literals in fixtures.sql). Pin each to the
+// seeded shape its harness tests document: ScopelessAPIKey → one ACTIVE
+// row with ZERO scope mappings; InactiveScopeAPIKey → one ACTIVE row
+// whose every mapping points at an inactive scope definition; the
+// non-"cav7_" tokens → one ACTIVE row apiece with at least one active
+// scope mapping. Drift here would silently re-vacuify the
+// resolution-edge-case tests in datastores/auth_harness_test.go.
+func TestFixtures_ApiKeyVariantsMatchDocumentedShape(t *testing.T) {
+	db, _ := testdb.Open(t)
+
+	activeRows := func(token string) int {
+		var n int
+		if err := db.QueryRow(
+			`SELECT COUNT(*) FROM xf_cav7_api_key
+			 WHERE key_hash = UNHEX(SHA2(?, 256)) AND is_active = 1`,
+			token,
+		).Scan(&n); err != nil {
+			t.Fatalf("counting active rows for %q: %v", token, err)
+		}
+		return n
+	}
+	// Raw mapping rows (no def join — a mapping to a missing or inactive
+	// def still counts) vs. mappings that survive the def join with
+	// sd.is_active = 1, i.e. what the resolving query actually sees.
+	mappings := func(token string, onlyActive bool) int {
+		var n int
+		q := `SELECT COUNT(*)
+			  FROM   xf_cav7_api_key k
+			  JOIN   xf_cav7_api_key_scope ks ON ks.key_id = k.key_id
+			  WHERE  k.key_hash = UNHEX(SHA2(?, 256))`
+		if onlyActive {
+			q = `SELECT COUNT(*)
+				 FROM   xf_cav7_api_key k
+				 JOIN   xf_cav7_api_key_scope ks     ON ks.key_id   = k.key_id
+				 JOIN   xf_cav7_api_key_scope_def sd ON sd.scope_id = ks.scope_id
+				 WHERE  k.key_hash   = UNHEX(SHA2(?, 256))
+				   AND  sd.is_active = 1`
+		}
+		if err := db.QueryRow(q, token).Scan(&n); err != nil {
+			t.Fatalf("counting scope mappings for %q: %v", token, err)
+		}
+		return n
+	}
+
+	if n := activeRows(testdb.ScopelessAPIKey); n != 1 {
+		t.Errorf("ScopelessAPIKey must hash to exactly one ACTIVE row, got %d", n)
+	}
+	if n := mappings(testdb.ScopelessAPIKey, false); n != 0 {
+		t.Errorf("ScopelessAPIKey must have ZERO scope mappings (the case under test), got %d", n)
+	}
+
+	if n := activeRows(testdb.InactiveScopeAPIKey); n != 1 {
+		t.Errorf("InactiveScopeAPIKey must hash to exactly one ACTIVE row, got %d", n)
+	}
+	if total, active := mappings(testdb.InactiveScopeAPIKey, false), mappings(testdb.InactiveScopeAPIKey, true); total == 0 || active != 0 {
+		t.Errorf("InactiveScopeAPIKey must have mappings but ZERO active ones (total=%d, active=%d)", total, active)
+	}
+
+	for _, token := range []string{testdb.MeuPrefixAPIKey, testdb.UnbrandedAPIKey} {
+		if n := activeRows(token); n != 1 {
+			t.Errorf("%q must hash to exactly one ACTIVE row, got %d", token, n)
+		}
+		if n := mappings(token, true); n == 0 {
+			t.Errorf("%q must carry at least one ACTIVE scope mapping", token)
+		}
+	}
+}
+
 // Each Open call must yield its own database so tests can run DDL
 // (e.g. CREATE INDEX for green-plan comparisons) without leaking into
 // sibling tests.

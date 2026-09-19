@@ -299,9 +299,24 @@ INSERT INTO xf_nf_tickets_ticket_field_value (ticket_id, field_id, field_value) 
 -- API keys (Cav7 ApiKeyManager)
 -- ---------------------------------------------------------------------
 -- Raw key material is the testdb package's public contract
--- (testdb.ActiveAPIKey / testdb.RevokedAPIKey); only hashes are stored,
--- matching the datastore's UNHEX(SHA2(?, 256)) lookup. Scope 3 is an
--- inactive scope attached to the active key: it must NOT surface.
+-- (testdb.ActiveAPIKey / testdb.RevokedAPIKey and the variant keys
+-- below); only hashes are stored — UNHEX(SHA2(token, 256)) is the
+-- byte-for-byte equivalent of the crypto/sha256 digest the datastore
+-- now computes in-process. Scope 3 is an inactive scope attached to
+-- the active key: it must NOT surface.
+--
+-- The variant keys pin the inner-join resolution edge cases:
+--   key 3 (cav7_harness_scopeless):     ACTIVE but has NO scope mapping
+--                                       rows — zero joined rows, so it
+--                                       fails auth like an unknown key.
+--   key 4 (cav7_harness_inactivescope): ACTIVE, mapped ONLY to inactive
+--                                       scope def 3 — also zero joined
+--                                       rows → fails auth.
+--   key 5 (meu15_harness_active):       ACTIVE under a non-"cav7_"
+--                                       prefix; proves the prefix is
+--                                       branding, not authentication.
+--   key 6 (unbranded_harness_secret):   ACTIVE with no branding prefix
+--                                       at all.
 INSERT INTO xf_cav7_api_key_scope_def
   (scope_id, scope_name, title, description, is_active) VALUES
   (1, 'read',         'Read',         'Read milpacs data',  1),
@@ -310,11 +325,20 @@ INSERT INTO xf_cav7_api_key_scope_def
 
 INSERT INTO xf_cav7_api_key
   (key_id, user_id, key_hash, key_prefix, is_active, created_date) VALUES
-  (1, 401, UNHEX(SHA2('cav7_harness_active', 256)),  'cav7_harness', 1, 1740000000),
-  (2, 400, UNHEX(SHA2('cav7_harness_revoked', 256)), 'cav7_harness', 0, 1740000000);
+  (1, 401, UNHEX(SHA2('cav7_harness_active', 256)),        'cav7_harness', 1, 1740000000),
+  (2, 400, UNHEX(SHA2('cav7_harness_revoked', 256)),       'cav7_harness', 0, 1740000000),
+  (3, 402, UNHEX(SHA2('cav7_harness_scopeless', 256)),     'cav7_harness', 1, 1740000000),
+  (4, 403, UNHEX(SHA2('cav7_harness_inactivescope', 256)), 'cav7_harness', 1, 1740000000),
+  (5, 404, UNHEX(SHA2('meu15_harness_active', 256)),       'meu15_harnes', 1, 1740000000),
+  (6, 405, UNHEX(SHA2('unbranded_harness_secret', 256)),   'unbranded_ha', 1, 1740000000);
 
+-- Key 3 deliberately has NO rows here: "active key, zero scope
+-- mappings" is the case under test.
 INSERT INTO xf_cav7_api_key_scope (key_id, scope_id) VALUES
   (1, 1),
   (1, 2),
   (1, 3),
-  (2, 1);
+  (2, 1),
+  (4, 3),
+  (5, 1),
+  (6, 1);

@@ -41,9 +41,27 @@ const rootPassword = "harness"
 // ActiveAPIKey is the raw bearer key seeded with active scopes
 // ("read", "read:tickets"); its hash lives in xf_cav7_api_key.
 // RevokedAPIKey is seeded inactive and must fail validation.
+//
+// ScopelessAPIKey is seeded ACTIVE but with no rows in
+// xf_cav7_api_key_scope; InactiveScopeAPIKey is seeded ACTIVE mapped
+// only to the retired "admin" scope definition. The resolving query's
+// inner joins produce zero rows for both, so they fail validation with
+// the same (nil, nil) outcome as an unknown key — the HTTP tier answers
+// 401, NOT the 403 a resolved-but-scopeless identity would produce (the
+// fake datastore models that identity; the divergence is a documented
+// seam, pinned — not fixed — by the harness tests).
+//
+// MeuPrefixAPIKey and UnbrandedAPIKey are seeded ACTIVE with the "read"
+// scope under token text carrying a different branding prefix (or none
+// at all): the lookup hashes the whole token, so "cav7_" is branding,
+// not part of authentication.
 const (
-	ActiveAPIKey  = "cav7_harness_active"
-	RevokedAPIKey = "cav7_harness_revoked"
+	ActiveAPIKey        = "cav7_harness_active"
+	RevokedAPIKey       = "cav7_harness_revoked"
+	ScopelessAPIKey     = "cav7_harness_scopeless"
+	InactiveScopeAPIKey = "cav7_harness_inactivescope"
+	MeuPrefixAPIKey     = "meu15_harness_active"
+	UnbrandedAPIKey     = "unbranded_harness_secret"
 )
 
 //go:embed schema.sql

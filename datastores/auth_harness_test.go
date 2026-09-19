@@ -321,3 +321,223 @@ func TestValidateApiKey_DatabaseErrorIsErrorNotUnauthenticated(t *testing.T) {
 		t.Fatalf("ValidateApiKey over a dead pool must return an error (500 path), got (%+v, nil) — indistinguishable from an invalid key (401 path)", result)
 	}
 }
+
+// The resolving query's INNER joins mean an ACTIVE key with no scope
+// mappings at all produces ZERO rows — the identical (nil, nil) outcome
+// as an unknown or revoked key. The HTTP tier therefore answers the
+// generic 401 for a no-scope key, NOT the 403 a resolved-but-empty-scope
+// identity would produce (the fake datastore models that identity:
+// cav7_noscopekey → ApiKeyResult{Scopes:{}} → 403). This is the
+// documented divergence between the fake and real datastores — pinned
+// here so the migration sees it, not fixed by it.
+func TestValidateApiKey_ActiveKeyNoScopeMappingsYieldsNil(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	result, err := ds.ValidateApiKey(testdb.ScopelessAPIKey)
+	if err != nil {
+		t.Fatalf("ValidateApiKey(scopeless): %v", err)
+	}
+	if result != nil {
+		t.Errorf("active key with zero scope mappings must yield nil (inner joins produce no rows → 401, not a scopeless 403 identity), got %+v", result)
+	}
+}
+
+// The same inner-join outcome via the other leg of the WHERE clause: an
+// ACTIVE key whose every scope mapping points at a retired
+// (is_active = 0) scope definition also yields zero rows — the
+// sd.is_active = 1 predicate eliminates the only joined row.
+func TestValidateApiKey_ActiveKeyOnlyInactiveScopeDefsYieldsNil(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	result, err := ds.ValidateApiKey(testdb.InactiveScopeAPIKey)
+	if err != nil {
+		t.Fatalf("ValidateApiKey(inactive-scope-only): %v", err)
+	}
+	if result != nil {
+		t.Errorf("active key mapped only to inactive scope defs must yield nil, got %+v", result)
+	}
+}
+
+// A resolution that yields no rows never schedules the metering
+// goroutine: the observer stays silent AND last_used_date keeps its
+// seeded 0 on every rejected key row. Covers each failure flavor —
+// revoked (row present, is_active = 0), scopeless (active row, no
+// mappings), and never-issued (no row at all). The 200 ms silence
+// window mirrors TestValidateApiKey_FailedKeyResolutionFiresNoBump.
+func TestValidateApiKey_FailedResolutionLeavesLastUsedDate(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	bumpFired := make(chan error, 1)
+	ds.OnKeyUsed = func(e error) { bumpFired <- e }
+
+	for _, token := range []string{testdb.RevokedAPIKey, testdb.ScopelessAPIKey, "cav7_never_issued"} {
+		result, err := ds.ValidateApiKey(token)
+		if err != nil {
+			t.Fatalf("ValidateApiKey(%q): %v", token, err)
+		}
+		if result != nil {
+			t.Fatalf("ValidateApiKey(%q) must not authenticate, got %+v", token, result)
+		}
+	}
+
+	select {
+	case <-bumpFired:
+		t.Fatal("the metering bump must not run when resolution produces no rows")
+	case <-time.After(200 * time.Millisecond):
+		// expected: no bump attempted
+	}
+
+	// The seeded-but-rejected keys (2 revoked, 3 scopeless) keep the
+	// fixture's DEFAULT 0 — a bump would have stamped UNIX_TIMESTAMP().
+	var stamps []struct {
+		KeyId        uint   `gorm:"column:key_id"`
+		LastUsedDate uint64 `gorm:"column:last_used_date"`
+	}
+	if err := ds.Db.Raw(
+		`SELECT key_id, last_used_date FROM xf_cav7_api_key WHERE key_id IN (2, 3) ORDER BY key_id`,
+	).Scan(&stamps).Error; err != nil {
+		t.Fatalf("reading back last_used_date: %v", err)
+	}
+	if len(stamps) != 2 {
+		t.Fatalf("expected both seeded rejected-key rows, got %d", len(stamps))
+	}
+	for _, s := range stamps {
+		if s.LastUsedDate != 0 {
+			t.Errorf("key_id %d last_used_date = %d, want the seeded 0 (failed resolution must not meter)", s.KeyId, s.LastUsedDate)
+		}
+	}
+}
+
+// The "cav7_" token prefix is branding, not authentication: the lookup
+// hashes the WHOLE token text (SHA-256 computed in-process, see
+// apiKeyDigest) with no prefix handling, so a token minted under a
+// different prefix — or no branding prefix at all — resolves exactly
+// like a cav7_ one. Pinned against real rows so the migration to
+// differently-prefixed keys needs no auth-path change.
+func TestValidateApiKey_TokenPrefixIsNotPartOfCredential(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	for _, tc := range []struct {
+		name     string
+		token    string
+		wantKey  uint
+		wantUser uint
+	}{
+		{"different branding prefix", testdb.MeuPrefixAPIKey, 5, 404},
+		{"no branding prefix", testdb.UnbrandedAPIKey, 6, 405},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			result, err := ds.ValidateApiKey(tc.token)
+			if err != nil {
+				t.Fatalf("ValidateApiKey(%q): %v", tc.token, err)
+			}
+			if result == nil {
+				t.Fatalf("token %q must authenticate — the prefix is not part of the credential", tc.token)
+			}
+			if result.KeyId != tc.wantKey {
+				t.Errorf("KeyId = %d, want %d", result.KeyId, tc.wantKey)
+			}
+			if result.UserId != tc.wantUser {
+				t.Errorf("UserId = %d, want %d", result.UserId, tc.wantUser)
+			}
+			if !result.HasScope("read") {
+				t.Error("expected the seeded active read scope")
+			}
+		})
+	}
+}
+
+// The in-process digest must be byte-for-byte equivalent to the
+// issuer's UNHEX(SHA2(<token>, 256)) — the migration hinges on it.
+// Proven on the real server for every token shape auth can see:
+// prefixed and unbranded tokens, case and one-character differences,
+// preserved internal whitespace, non-ASCII bytes, and the empty /
+// max-length extremes. Both the raw 32-byte digest and its HEX form
+// are compared. (The resolution tests above already prove the wiring
+// end-to-end: fixtures were seeded with the SQL expression and are
+// resolved by the Go digest.)
+func TestApiKeyDigest_ByteEquivalentToMariaDBSHA2(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	tokens := []string{
+		testdb.ActiveAPIKey,
+		testdb.RevokedAPIKey,
+		testdb.ScopelessAPIKey,
+		testdb.MeuPrefixAPIKey,
+		testdb.UnbrandedAPIKey,
+		"cav7_harness_activ3",    // one character different
+		"CAV7_HARNESS_ACTIVE",    // case difference
+		"meu15_harness_revoked",  // prefix-swapped revoked token
+		"cav7_internal  space",   // preserved internal whitespace
+		"cav7_ünïcode_tøken",     // non-ASCII bytes
+		"",                       // empty token
+		strings.Repeat("x", 128), // max bearer-token length
+	}
+	for _, token := range tokens {
+		goDigest := sha256.Sum256([]byte(token))
+
+		// Scan into a named struct field: a bare *[]byte destination is
+		// ambiguous to gorm (it reads it as a multi-row []uint8).
+		var out []struct {
+			Digest []byte `gorm:"column:digest"`
+			Hex    string `gorm:"column:digest_hex"`
+		}
+		if err := ds.Db.Raw(
+			`SELECT UNHEX(SHA2(?, 256)) AS digest, HEX(UNHEX(SHA2(?, 256))) AS digest_hex`,
+			token, token,
+		).Scan(&out).Error; err != nil {
+			t.Fatalf("SHA2(%q): %v", token, err)
+		}
+		if len(out) != 1 {
+			t.Fatalf("SHA2(%q) returned %d rows", token, len(out))
+		}
+		if !bytes.Equal(goDigest[:], out[0].Digest) {
+			t.Errorf("token %q: Go sha256 %x != MariaDB UNHEX(SHA2) %x", token, goDigest, out[0].Digest)
+		}
+		if got := hex.EncodeToString(goDigest[:]); !strings.EqualFold(out[0].Hex, got) {
+			t.Errorf("token %q: Go hex %s != MariaDB HEX %s", token, got, out[0].Hex)
+		}
+	}
+}
+
+// The credential is the EXACT token text: any byte-level difference
+// changes the SHA-256 hash, so tokens sharing a suffix but differing in
+// prefix are DIFFERENT credentials resolving to different keys — and a
+// one-character change makes a valid token unrecognizable. This is why
+// "cav7_secret" and "meu15_secret" are distinct credentials even though
+// the bearer parser ignores the prefix entirely.
+func TestValidateApiKey_TokenTextIsTheWholeCredential(t *testing.T) {
+	ds := openHarnessDatastore(t)
+
+	cases := []struct {
+		name    string
+		token   string
+		wantKey uint // 0 ⇒ expect a nil result
+	}{
+		{"meu15 token resolves to its own key", testdb.MeuPrefixAPIKey, 5},
+		{"same suffix under cav7_ is a DIFFERENT key", "cav7_harness_active", 1},
+		{"prefix-swapped revoked token matches nothing", "meu15_harness_revoked", 0},
+		{"single-character change hashes to nothing", "meu15_harness_activ3", 0},
+		{"trailing space changes the hash", testdb.MeuPrefixAPIKey + " ", 0},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			result, err := ds.ValidateApiKey(tc.token)
+			if err != nil {
+				t.Fatalf("ValidateApiKey(%q): %v", tc.token, err)
+			}
+			if tc.wantKey == 0 {
+				if result != nil {
+					t.Errorf("token %q must not authenticate, got key_id %d", tc.token, result.KeyId)
+				}
+				return
+			}
+			if result == nil {
+				t.Fatalf("token %q must authenticate", tc.token)
+			}
+			if result.KeyId != tc.wantKey {
+				t.Errorf("token %q resolved to key_id %d, want %d", tc.token, result.KeyId, tc.wantKey)
+			}
+		})
+	}
+}
