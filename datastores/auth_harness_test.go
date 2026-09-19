@@ -132,7 +132,7 @@ func TestValidateApiKey_SuccessBumpsLastUsedDate(t *testing.T) {
 
 	var lastUsed uint64
 	if err := ds.Db.Raw(
-		`SELECT last_used_date FROM xf_cav7_api_key WHERE key_id = 1`,
+		`SELECT last_used_date FROM xf_15meu_api_key WHERE key_id = 1`,
 	).Scan(&lastUsed).Error; err != nil {
 		t.Fatalf("reading back last_used_date: %v", err)
 	}
@@ -177,7 +177,7 @@ func TestValidateApiKey_BumpUpdateFailureIsReportedNotSwallowed(t *testing.T) {
 
 	// Now break ONLY the UPDATE's target column. Resolution does not select it,
 	// so the next validation still resolves; the async UPDATE fails.
-	if err := ds.Db.Exec(`ALTER TABLE xf_cav7_api_key DROP COLUMN last_used_date`).Error; err != nil {
+	if err := ds.Db.Exec(`ALTER TABLE xf_15meu_api_key DROP COLUMN last_used_date`).Error; err != nil {
 		t.Fatalf("dropping last_used_date to fault only the UPDATE: %v", err)
 	}
 
@@ -287,7 +287,7 @@ func TestValidateApiKey_NilObserverStillBumps(t *testing.T) {
 	for {
 		var lastUsed uint64
 		if err := gormDB.Raw(
-			`SELECT last_used_date FROM xf_cav7_api_key WHERE key_id = 1`,
+			`SELECT last_used_date FROM xf_15meu_api_key WHERE key_id = 1`,
 		).Scan(&lastUsed).Error; err != nil {
 			t.Fatalf("reading back last_used_date: %v", err)
 		}
@@ -394,7 +394,7 @@ func TestValidateApiKey_FailedResolutionLeavesLastUsedDate(t *testing.T) {
 		LastUsedDate uint64 `gorm:"column:last_used_date"`
 	}
 	if err := ds.Db.Raw(
-		`SELECT key_id, last_used_date FROM xf_cav7_api_key WHERE key_id IN (2, 3) ORDER BY key_id`,
+		`SELECT key_id, last_used_date FROM xf_15meu_api_key WHERE key_id IN (2, 3) ORDER BY key_id`,
 	).Scan(&stamps).Error; err != nil {
 		t.Fatalf("reading back last_used_date: %v", err)
 	}

@@ -394,10 +394,10 @@ CREATE TABLE `xf_phrase` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ---------------------------------------------------------------------
--- Cav7 ApiKeyManager add-on
+-- 15th MEU ApiKeyManager add-on
 -- ---------------------------------------------------------------------
 
-CREATE TABLE `xf_cav7_api_key` (
+CREATE TABLE `xf_15meu_api_key` (
   `key_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `key_hash` varbinary(32) NOT NULL,
@@ -411,14 +411,14 @@ CREATE TABLE `xf_cav7_api_key` (
   KEY `is_active` (`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `xf_cav7_api_key_scope` (
+CREATE TABLE `xf_15meu_api_key_scope` (
   `key_id` int(10) unsigned NOT NULL,
   `scope_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`key_id`,`scope_id`),
   KEY `scope_id` (`scope_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `xf_cav7_api_key_scope_def` (
+CREATE TABLE `xf_15meu_api_key_scope_def` (
   `scope_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `scope_name` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,

@@ -761,7 +761,7 @@ func (ds Mysql) FindAwol() ([]*types.Awol, error) {
 
 // apiKeyDigest returns the raw SHA-256 of the exact bearer token — the
 // byte-for-byte equivalent of the upstream issuer's
-// UNHEX(SHA2(<token>, 256)) stored in xf_cav7_api_key.key_hash. The
+// UNHEX(SHA2(<token>, 256)) stored in xf_15meu_api_key.key_hash. The
 // digest is computed in-process rather than in SQL so the raw bearer
 // token is never a bound query parameter: production runs GORM's
 // default logger (Warn level), which renders bound parameters into
@@ -783,9 +783,9 @@ func (ds Mysql) ValidateApiKey(rawKey string) (*ApiKeyResult, error) {
 	}
 	tx := ds.Db.Raw(`
 		SELECT k.key_id, k.user_id, sd.scope_name
-		FROM   xf_cav7_api_key k
-		JOIN   xf_cav7_api_key_scope ks     ON ks.key_id   = k.key_id
-		JOIN   xf_cav7_api_key_scope_def sd ON sd.scope_id = ks.scope_id
+		FROM   xf_15meu_api_key k
+		JOIN   xf_15meu_api_key_scope ks     ON ks.key_id   = k.key_id
+		JOIN   xf_15meu_api_key_scope_def sd ON sd.scope_id = ks.scope_id
 		WHERE  k.key_hash   = ?
 		  AND  k.is_active  = 1
 		  AND  sd.is_active = 1`, apiKeyDigest(rawKey)).Scan(&rows)
@@ -806,7 +806,7 @@ func (ds Mysql) ValidateApiKey(rawKey string) (*ApiKeyResult, error) {
 	// optional observer is notified so behavior tests can pin the side effect
 	// and avoid racing harness teardown.
 	go func() {
-		err := ds.Db.Exec(`UPDATE xf_cav7_api_key SET last_used_date = UNIX_TIMESTAMP() WHERE key_id = ?`, keyId).Error
+		err := ds.Db.Exec(`UPDATE xf_15meu_api_key SET last_used_date = UNIX_TIMESTAMP() WHERE key_id = ?`, keyId).Error
 		if err != nil {
 			Error.Printf("bumping last_used_date for key_id %d: %v", keyId, err)
 		}

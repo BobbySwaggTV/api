@@ -39,11 +39,11 @@ import (
 const rootPassword = "harness"
 
 // ActiveAPIKey is the raw bearer key seeded with active scopes
-// ("read", "read:tickets"); its hash lives in xf_cav7_api_key.
+// ("read", "read:tickets"); its hash lives in xf_15meu_api_key.
 // RevokedAPIKey is seeded inactive and must fail validation.
 //
 // ScopelessAPIKey is seeded ACTIVE but with no rows in
-// xf_cav7_api_key_scope; InactiveScopeAPIKey is seeded ACTIVE mapped
+// xf_15meu_api_key_scope; InactiveScopeAPIKey is seeded ACTIVE mapped
 // only to the retired "admin" scope definition. The resolving query's
 // inner joins produce zero rows for both, so they fail validation with
 // the same (nil, nil) outcome as an unknown key — the HTTP tier answers

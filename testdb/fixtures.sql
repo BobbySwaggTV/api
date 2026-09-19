@@ -317,13 +317,13 @@ INSERT INTO xf_nf_tickets_ticket_field_value (ticket_id, field_id, field_value) 
 --                                       branding, not authentication.
 --   key 6 (unbranded_harness_secret):   ACTIVE with no branding prefix
 --                                       at all.
-INSERT INTO xf_cav7_api_key_scope_def
+INSERT INTO xf_15meu_api_key_scope_def
   (scope_id, scope_name, title, description, is_active) VALUES
   (1, 'read',         'Read',         'Read milpacs data',  1),
   (2, 'read:tickets', 'Read tickets', 'Read tickets data',  1),
   (3, 'admin',        'Admin',        'Retired scope',      0);
 
-INSERT INTO xf_cav7_api_key
+INSERT INTO xf_15meu_api_key
   (key_id, user_id, key_hash, key_prefix, is_active, created_date) VALUES
   (1, 401, UNHEX(SHA2('cav7_harness_active', 256)),        'cav7_harness', 1, 1740000000),
   (2, 400, UNHEX(SHA2('cav7_harness_revoked', 256)),       'cav7_harness', 0, 1740000000),
@@ -334,7 +334,7 @@ INSERT INTO xf_cav7_api_key
 
 -- Key 3 deliberately has NO rows here: "active key, zero scope
 -- mappings" is the case under test.
-INSERT INTO xf_cav7_api_key_scope (key_id, scope_id) VALUES
+INSERT INTO xf_15meu_api_key_scope (key_id, scope_id) VALUES
   (1, 1),
   (1, 2),
   (1, 3),

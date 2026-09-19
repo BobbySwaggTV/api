@@ -899,12 +899,12 @@ paths:
 components:
   securitySchemes:
     # http/bearer makes the docs UI auto-prepend "Bearer " so users paste only
-    # the raw cav7_… key.
+    # the raw 15meu_… key.
     bearer:
       type: http
       scheme: bearer
       description: >-
-        15th MEU API key (cav7_…), sent as `Authorization: Bearer <key>`.
+        15th MEU API key (15meu_…), sent as `Authorization: Bearer <key>`.
         Members generate a key from the API key manager at
         https://15thmeu.org/account/api-key.
         Requests without the Bearer scheme receive a plain-text 401 naming

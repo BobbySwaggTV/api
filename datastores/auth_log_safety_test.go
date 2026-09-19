@@ -117,7 +117,7 @@ func assertNoTokenInLog(t *testing.T, logged, token string) {
 func TestValidateApiKey_ErrorLogDoesNotLeakToken(t *testing.T) {
 	ds, buf := openLoggedHarnessDatastore(t, productionLoggerConfig)
 
-	if err := ds.Db.Exec(`ALTER TABLE xf_cav7_api_key DROP COLUMN key_hash`).Error; err != nil {
+	if err := ds.Db.Exec(`ALTER TABLE xf_15meu_api_key DROP COLUMN key_hash`).Error; err != nil {
 		t.Fatalf("dropping key_hash to fault the resolving SELECT: %v", err)
 	}
 

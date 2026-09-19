@@ -95,9 +95,9 @@ func TestFixtures_ApiKeysResolveScopes(t *testing.T) {
 
 	rows, err := db.Query(
 		`SELECT sd.scope_name
-		 FROM   xf_cav7_api_key k
-		 JOIN   xf_cav7_api_key_scope ks     ON ks.key_id   = k.key_id
-		 JOIN   xf_cav7_api_key_scope_def sd ON sd.scope_id = ks.scope_id
+		 FROM   xf_15meu_api_key k
+		 JOIN   xf_15meu_api_key_scope ks     ON ks.key_id   = k.key_id
+		 JOIN   xf_15meu_api_key_scope_def sd ON sd.scope_id = ks.scope_id
 		 WHERE  k.key_hash   = UNHEX(SHA2(?, 256))
 		   AND  k.is_active  = 1
 		   AND  sd.is_active = 1`, testdb.ActiveAPIKey)
@@ -124,8 +124,8 @@ func TestFixtures_ApiKeysResolveScopes(t *testing.T) {
 	}
 
 	for _, neg := range []struct{ label, sql string }{
-		{"inactive key", `SELECT COUNT(*) FROM xf_cav7_api_key WHERE is_active = 0`},
-		{"inactive scope def", `SELECT COUNT(*) FROM xf_cav7_api_key_scope_def WHERE is_active = 0`},
+		{"inactive key", `SELECT COUNT(*) FROM xf_15meu_api_key WHERE is_active = 0`},
+		{"inactive scope def", `SELECT COUNT(*) FROM xf_15meu_api_key_scope_def WHERE is_active = 0`},
 	} {
 		var n int
 		if err := db.QueryRow(neg.sql).Scan(&n); err != nil {
@@ -148,7 +148,7 @@ func TestFixtures_RevokedAPIKeyResolvesToInactiveRow(t *testing.T) {
 
 	var n int
 	if err := db.QueryRow(
-		`SELECT COUNT(*) FROM xf_cav7_api_key
+		`SELECT COUNT(*) FROM xf_15meu_api_key
 		 WHERE key_hash = UNHEX(SHA2(?, 256)) AND is_active = 0`,
 		testdb.RevokedAPIKey,
 	).Scan(&n); err != nil {
@@ -173,7 +173,7 @@ func TestFixtures_ApiKeyVariantsMatchDocumentedShape(t *testing.T) {
 	activeRows := func(token string) int {
 		var n int
 		if err := db.QueryRow(
-			`SELECT COUNT(*) FROM xf_cav7_api_key
+			`SELECT COUNT(*) FROM xf_15meu_api_key
 			 WHERE key_hash = UNHEX(SHA2(?, 256)) AND is_active = 1`,
 			token,
 		).Scan(&n); err != nil {
@@ -187,14 +187,14 @@ func TestFixtures_ApiKeyVariantsMatchDocumentedShape(t *testing.T) {
 	mappings := func(token string, onlyActive bool) int {
 		var n int
 		q := `SELECT COUNT(*)
-			  FROM   xf_cav7_api_key k
-			  JOIN   xf_cav7_api_key_scope ks ON ks.key_id = k.key_id
+			  FROM   xf_15meu_api_key k
+			  JOIN   xf_15meu_api_key_scope ks ON ks.key_id = k.key_id
 			  WHERE  k.key_hash = UNHEX(SHA2(?, 256))`
 		if onlyActive {
 			q = `SELECT COUNT(*)
-				 FROM   xf_cav7_api_key k
-				 JOIN   xf_cav7_api_key_scope ks     ON ks.key_id   = k.key_id
-				 JOIN   xf_cav7_api_key_scope_def sd ON sd.scope_id = ks.scope_id
+				 FROM   xf_15meu_api_key k
+				 JOIN   xf_15meu_api_key_scope ks     ON ks.key_id   = k.key_id
+				 JOIN   xf_15meu_api_key_scope_def sd ON sd.scope_id = ks.scope_id
 				 WHERE  k.key_hash   = UNHEX(SHA2(?, 256))
 				   AND  sd.is_active = 1`
 		}
