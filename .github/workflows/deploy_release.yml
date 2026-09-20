@@ -1,0 +1,50 @@
+name: Deploy 15th MEU API
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.10'
+
+      - name: Build production binary
+        run: |
+          go build \
+            -ldflags "-X github.com/BobbySwaggTV/api/servers.version=${{ github.ref_name }}" \
+            -o 15meu-api .
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload binary
+        run: |
+          scp \
+            -i ~/.ssh/deploy_key \
+            15meu-api \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/tmp/15meu-api"
+
+      - name: Install and restart API
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            'sudo /usr/bin/install -m 755 /tmp/15meu-api /usr/local/bin/15meu-api && sudo /usr/bin/systemctl restart 15meu-api && sudo /usr/bin/systemctl is-active 15meu-api'
+
+      - name: Verify production endpoint
+        run: |
+          sleep 3
+          curl --fail --silent --show-error https://api.15thmeu.org > /dev/null
