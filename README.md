@@ -157,13 +157,16 @@ spec and golden steps are CI-enforced. The full checklist is in
 
 This project derives from [7Cav API](https://github.com/7Cav/api). Original
 copyright and GPL notices are retained; see [LICENSE](LICENSE). Historical
-architecture decisions retain upstream references. API-key prefixes and
-database table names remain unchanged for compatibility in this phase.
+architecture decisions retain upstream references. The `15meu_` API-key
+prefix and the `xf_15meu_*` table names are the live 15th MEU identifiers;
+the `meu15_`-prefixed and unbranded fixture keys exist only to pin
+that the bearer token's prefix is branding, not part of authentication.
 
-The release workflow still references the upstream Docker Hub repository and
-watcher endpoint. Confirm the 15th MEU publication repository and deployment
-watcher before publishing a release; no replacement has been assumed.
-The existing reservist-group title is an exact database lookup used to return
-`Reserve`, so it is functional legacy compatibility, not a branding-only
-label. It remains unchanged in this phase, along with all hierarchy and
-roster logic; any later migration requires a confirmed group title.
+The release workflow builds the `15th-meu-api` image but does not publish
+it: no 15th MEU container registry or deployment watcher has been
+configured yet, and the pipeline must not push to the upstream 7Cav
+infrastructure. Publishing stays disabled until a 15th MEU target exists.
+
+The reservist position group is matched brand-neutrally (any group title
+containing `Reserv` maps to `Reserve`), so no organization-specific title
+is hardcoded while the 15th MEU's own group naming is being established.

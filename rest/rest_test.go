@@ -98,11 +98,11 @@ func (f *fakeDatastore) ValidateApiKey(rawKey string) (*datastores.ApiKeyResult,
 		return m
 	}
 	switch rawKey {
-	case "cav7_readkey":
+	case "15meu_test_readkey":
 		return &datastores.ApiKeyResult{KeyId: 101, UserId: 3, Scopes: scopes("read")}, nil
-	case "cav7_ticketskey":
+	case "15meu_test_ticketskey":
 		return &datastores.ApiKeyResult{KeyId: 102, UserId: 8, Scopes: scopes("read:tickets")}, nil
-	case "cav7_noscopekey":
+	case "15meu_test_noscopekey":
 		return &datastores.ApiKeyResult{KeyId: 103, UserId: 9, Scopes: scopes()}, nil
 	default:
 		return nil, nil // zero rows — generic Unauthorized, leaks nothing
@@ -422,7 +422,7 @@ func TestNewStack_GzipRoundTrip(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	req.Header.Set("Accept-Encoding", "gzip")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
@@ -448,7 +448,7 @@ func TestNewStack_GzipErrorResponseRoundTrip(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_ticketskey") // read:tickets ≠ read
+	req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey") // read:tickets ≠ read
 	req.Header.Set("Accept-Encoding", "gzip")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
@@ -489,7 +489,7 @@ func TestNewStack_RanksDatastoreOutageIsInternalJSON(t *testing.T) {
 	}}, &stubReferenceCache{})
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -521,7 +521,7 @@ func TestNewStack_ProfileLookupOutagesAreInternalJSON(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, tc.path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -548,7 +548,7 @@ func TestNewStack_EmptyProfileSliceWithNilErrorIsInternalJSON(t *testing.T) {
 	} {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -573,7 +573,7 @@ func TestNewStack_NilProfileWithNilErrorIsInternalJSON(t *testing.T) {
 	} {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -598,7 +598,7 @@ func TestNewStack_ByIdRoute_UsernameQueryOverridesPathId(t *testing.T) {
 
 	// Path id 2 is John.Doe; the username query must win and return Jarvis.
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/2?username=Jarvis.A", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -613,7 +613,7 @@ func TestNewStack_ByIdRoute_UsernameQueryPrecedesZeroIdGuard(t *testing.T) {
 	// The old handler checks username first: id 0 with a username query is a
 	// successful username lookup, not the zero-id 400.
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/0?username=Jarvis.A", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -627,7 +627,7 @@ func TestNewStack_ByIdRoute_UnknownUsernameQueryIs404NamingUsername(t *testing.T
 	// Precedence holds on the error path too: the 404 names the username,
 	// even though the path id would have resolved.
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/1?username=Ghost.User", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -639,7 +639,7 @@ func TestNewStack_ByIdRoute_UnknownQueryParamsIgnored(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/1?totally_unknown=1&alsoUnknown=x", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -657,7 +657,7 @@ func TestNewStack_UsernameRoute_UserIdQueryBindsButPathUsernameWins(t *testing.T
 	for _, query := range []string{"user_id=999", "userId=999"} {
 		t.Run(query, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?"+query, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -674,7 +674,7 @@ func TestNewStack_UsernameRoute_MalformedUserIdQueryIs400(t *testing.T) {
 	// handler ran) — camelCase spelling accepted, proto field name in the
 	// message, parse-error text leaked, exactly the gateway's wording.
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?userId=abc", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -692,7 +692,7 @@ func TestNewStack_UsernameRoute_EmptyUserIdQueryIs400(t *testing.T) {
 	for _, spelling := range []string{"user_id", "userId"} {
 		t.Run(spelling, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?"+spelling+"=", nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -709,7 +709,7 @@ func TestNewStack_ByIdRoute_EmptyUsernameQueryFallsThroughToPathId(t *testing.T)
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/2?username=", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -729,14 +729,14 @@ func TestNewStack_UsernameRoute_CrossSpellingUserIdQuery(t *testing.T) {
 
 	// The reference: the path-username profile with no query at all.
 	ref := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A", nil)
-	ref.Header.Set("Authorization", "Bearer cav7_readkey")
+	ref.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	refRec := httptest.NewRecorder()
 	h.ServeHTTP(refRec, ref)
 	require.Equal(t, http.StatusOK, refRec.Code)
 
 	t.Run("both_parse_200_snake_first", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?user_id=1&userId=2", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -747,7 +747,7 @@ func TestNewStack_UsernameRoute_CrossSpellingUserIdQuery(t *testing.T) {
 
 	t.Run("both_parse_200_camel_first", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?userId=2&user_id=1", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -757,7 +757,7 @@ func TestNewStack_UsernameRoute_CrossSpellingUserIdQuery(t *testing.T) {
 
 	t.Run("bad_snake_400_snake_first", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?user_id=abc&userId=5", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -767,7 +767,7 @@ func TestNewStack_UsernameRoute_CrossSpellingUserIdQuery(t *testing.T) {
 
 	t.Run("bad_snake_400_camel_first", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?userId=5&user_id=abc", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -792,7 +792,7 @@ func TestNewStack_UsernameRoute_RepeatedUserIdQueryIs400(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?"+tc.query, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -817,7 +817,7 @@ func TestNewStack_ProfileRoutes_BracketKeyFoldsIntoField(t *testing.T) {
 
 	t.Run("username_route_user_id_bracket_is_too_many_values", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/username/Jarvis.A?user_id[0]=1", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -828,7 +828,7 @@ func TestNewStack_ProfileRoutes_BracketKeyFoldsIntoField(t *testing.T) {
 
 	t.Run("by_id_route_username_bracket_is_too_many_values", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/2?username[x]=y", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -838,7 +838,7 @@ func TestNewStack_ProfileRoutes_BracketKeyFoldsIntoField(t *testing.T) {
 
 	t.Run("unmatched_bracket_key_ignored", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/1?junk[0]=x", nil)
-		req.Header.Set("Authorization", "Bearer cav7_readkey")
+		req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 		rr := httptest.NewRecorder()
 		h.ServeHTTP(rr, req)
 
@@ -853,7 +853,7 @@ func TestNewStack_ByIdRoute_RepeatedUsernameQueryIs400(t *testing.T) {
 	// Singular fields reject repeated values (gateway behavior, message
 	// shape preserved).
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/2?username=a&username=b", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -885,7 +885,7 @@ func TestNewStack_ProfileRoutes_MalformedQuerySyntaxIs400(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, tc.path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -908,7 +908,7 @@ func TestNewStack_ConnectedAccountRoutes_MalformedQuerySyntaxIgnored(t *testing.
 	} {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -968,7 +968,7 @@ func TestNewStack_ByIdRoute_PathIdParsesBaseZero(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, tc.path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -985,7 +985,7 @@ func TestNewStack_ByIdRoute_MalformedPathIdBeatsUsernameQuery(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/abc?username=Jarvis.A", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1001,7 +1001,7 @@ func TestNewStack_ByIdRoute_MalformedPathBeatsMalformedQuerySyntax(t *testing.T)
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/abc?username=%zz", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1020,7 +1020,7 @@ func TestNewStack_ByIdRoute_UserIdQueryIgnoredBecausePathFiltered(t *testing.T) 
 	for _, query := range []string{"user_id=abc", "userId=abc"} {
 		t.Run(query, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/1?"+query, nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -1046,7 +1046,7 @@ func TestNewStack_WrongScopeBeatsMalformedPath_RuledBreak(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/profile/id/abc", nil)
-	req.Header.Set("Authorization", "Bearer cav7_ticketskey") // read:tickets ≠ read
+	req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey") // read:tickets ≠ read
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1070,7 +1070,7 @@ func TestNewStack_AllProfileRoutes403UnderTicketScopedKey(t *testing.T) {
 	} {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -1111,7 +1111,7 @@ func TestNewStack_WrongMethodOnKnownRouteIs405WithAllow(t *testing.T) {
 	for _, method := range []string{http.MethodPost, http.MethodPatch, http.MethodDelete, http.MethodPut} {
 		t.Run(method, func(t *testing.T) {
 			req := httptest.NewRequest(method, "/api/v1/milpacs/ranks", nil)
-			req.Header.Set("Authorization", "Bearer cav7_readkey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -1137,7 +1137,7 @@ func TestNewStack_WrongMethodOnUnknownTicketSubResourceStays404(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/tickets/42/bogus", nil)
-	req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1152,7 +1152,7 @@ func TestNewStack_WrongMethodOnTicketMessagesIs405WithAllow(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/tickets/42/messages", nil)
-	req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1165,7 +1165,7 @@ func TestNewStack_WrongMethodOnUnknownRouteStays404(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/does/not/exist", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1202,7 +1202,7 @@ func TestNewStack_HEADOnKnownRouteIs200WithNoBody(t *testing.T) {
 
 	req, err := http.NewRequest(http.MethodHead, srv.URL+"/api/v1/milpacs/ranks", nil)
 	require.NoError(t, err)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	res, err := srv.Client().Do(req)
 	require.NoError(t, err)
 	defer res.Body.Close()
@@ -1256,7 +1256,7 @@ func TestNewStack_EmptyRanksIsEmptyArray(t *testing.T) {
 	}}, &stubReferenceCache{})
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -1283,15 +1283,15 @@ func TestNewStack_EncodedSlashStaysSegmentData(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		{"/api/v1/roster/combat%2Ffoo", "cav7_readkey", http.StatusBadRequest,
+		{"/api/v1/roster/combat%2Ffoo", "15meu_test_readkey", http.StatusBadRequest,
 			`{"code":3,"message":"type mismatch, parameter: roster, error: combat/foo is not valid","details":[]}`},
-		{"/api/v1/milpacs/profile/username/john%2Fdoe", "cav7_readkey", http.StatusNotFound,
+		{"/api/v1/milpacs/profile/username/john%2Fdoe", "15meu_test_readkey", http.StatusNotFound,
 			`{"code":5,"message":"no profile found for username: john/doe","details":[]}`},
-		{"/api/v1/tickets/1%2Fmessages", "cav7_ticketskey", http.StatusBadRequest,
+		{"/api/v1/tickets/1%2Fmessages", "15meu_test_ticketskey", http.StatusBadRequest,
 			`{"code":3,"message":"type mismatch, parameter: ticket_id, error: strconv.ParseUint: parsing \"1/messages\": invalid syntax","details":[]}`},
-		{"/api/v1/tickets/ref%2Fmessages", "cav7_ticketskey", http.StatusBadRequest,
+		{"/api/v1/tickets/ref%2Fmessages", "15meu_test_ticketskey", http.StatusBadRequest,
 			`{"code":3,"message":"type mismatch, parameter: ticket_id, error: strconv.ParseUint: parsing \"ref/messages\": invalid syntax","details":[]}`},
-		{"/api/v1/foo%2Fbar", "cav7_readkey", http.StatusNotFound,
+		{"/api/v1/foo%2Fbar", "15meu_test_readkey", http.StatusNotFound,
 			`{"code":5,"message":"Not Found","details":[]}`},
 	}
 	for _, tc := range cases {

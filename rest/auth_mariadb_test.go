@@ -112,8 +112,8 @@ func TestMariaDBStack_ActiveKeyOnlyInactiveScopeDefsIs401(t *testing.T) {
 	assert.Equal(t, "Unauthorized", strings.TrimSpace(rr.Body.String()))
 }
 
-// The resolvable side of the same tables: the seeded cav7_ key serves a
-// scoped route, the non-"cav7_"-prefixed token authenticates
+// The resolvable side of the same tables: the seeded 15meu_ key serves a
+// scoped route, the non-"15meu_"-prefixed token authenticates
 // identically (the prefix is branding end-to-end, not just at the
 // datastore lookup), the revoked key is rejected, and the
 // resolved-vs-authorized split holds — a key carrying only "read"
@@ -128,7 +128,7 @@ func TestMariaDBStack_RealKeysThroughTheChain(t *testing.T) {
 		assert.Contains(t, rr.Body.String(), `"rankFull"`)
 	})
 
-	t.Run("non-cav7 prefix authenticates identically", func(t *testing.T) {
+	t.Run("non-15meu prefix authenticates identically", func(t *testing.T) {
 		rr := getWithKey(t, h, testdb.MeuPrefixAPIKey, "/api/v1/milpacs/ranks")
 		assert.Equal(t, http.StatusOK, rr.Code)
 	})
@@ -153,7 +153,7 @@ func TestMariaDBStack_RealKeysThroughTheChain(t *testing.T) {
 	})
 
 	t.Run("unknown key is the generic 401", func(t *testing.T) {
-		rr := getWithKey(t, h, "cav7_never_issued", "/api/v1/milpacs/ranks")
+		rr := getWithKey(t, h, "15meu_test_never_issued", "/api/v1/milpacs/ranks")
 		assert.Equal(t, http.StatusUnauthorized, rr.Code)
 		assert.Equal(t, "Unauthorized", strings.TrimSpace(rr.Body.String()))
 	})

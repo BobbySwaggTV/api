@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build Docker Image
 
 on:
   release:
@@ -18,23 +18,19 @@ jobs:
       # retired the proto sources and the build-time `make generate`, so there is
       # no proto-version sed step here anymore.
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v4.6.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Docker Image
+      # Publishing is intentionally disabled: no 15th MEU container registry,
+      # registry credentials, or deployment watcher has been configured yet.
+      # The pipeline only verifies that the release builds; it must NOT push to
+      # the upstream 7Cav Docker Hub repository or call the upstream watcher
+      # endpoint. Re-enable push (registry login + push: true + a deploy hook)
+      # once 15th MEU deployment targets are decided.
+      - name: Build Docker Image
         uses: docker/build-push-action@v7.3.0
         with:
           context: .
-          push: true
+          push: false
           build-args: |
             VERSION=${{ github.ref_name }}
           tags: |
-            7cav/api:${{ github.ref_name }}
-            7cav/api:latest
-
-      - name: Force Watchtower Update
-        run: |
-          curl -H "Authorization: Bearer ${{ secrets.WATCHER_KEY }}" https://watcher.7cav.us/v1/update
+            15th-meu-api:${{ github.ref_name }}
+            15th-meu-api:latest

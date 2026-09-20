@@ -2,7 +2,7 @@
 --
 -- Tables are cribbed from the production XenForo database (MariaDB 11.5)
 -- and cover exactly what the API reads: the NF Rosters add-on tables, the
--- NF Tickets add-on tables, the Cav7 ApiKeyManager tables, and the core
+-- NF Tickets add-on tables, the 15th MEU ApiKeyManager tables, and the core
 -- xf_user / xf_user_group / xf_user_connected_account / xf_post / xf_phrase
 -- tables.
 --

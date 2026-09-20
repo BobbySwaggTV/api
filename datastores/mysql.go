@@ -463,10 +463,12 @@ func getPositionGroup(profile milpacs.Profile) string {
 		return "HHQ"
 	case "New Recruits":
 		return "RTC"
-	case "7th Cavalry Reservists":
-		return "Reserve"
 	case "Extended Leave Of Absence":
 		return "ELOA"
+	}
+
+	if strings.Contains(primaryGroup, "Reserv") {
+		return "Reserve"
 	}
 
 	if strings.Contains(primaryGroup, "Command") {

@@ -27,7 +27,7 @@ import (
 func secondaryOutageGet(t *testing.T, h http.Handler, path string) *httptest.ResponseRecorder {
 	t.Helper()
 	req := httptest.NewRequest(http.MethodGet, path, nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 	return rr

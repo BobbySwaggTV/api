@@ -53,13 +53,13 @@ const rootPassword = "harness"
 //
 // MeuPrefixAPIKey and UnbrandedAPIKey are seeded ACTIVE with the "read"
 // scope under token text carrying a different branding prefix (or none
-// at all): the lookup hashes the whole token, so "cav7_" is branding,
+// at all): the lookup hashes the whole token, so "15meu_" is branding,
 // not part of authentication.
 const (
-	ActiveAPIKey        = "cav7_harness_active"
-	RevokedAPIKey       = "cav7_harness_revoked"
-	ScopelessAPIKey     = "cav7_harness_scopeless"
-	InactiveScopeAPIKey = "cav7_harness_inactivescope"
+	ActiveAPIKey        = "15meu_harness_active"
+	RevokedAPIKey       = "15meu_harness_revoked"
+	ScopelessAPIKey     = "15meu_harness_scopeless"
+	InactiveScopeAPIKey = "15meu_harness_inactivescope"
 	MeuPrefixAPIKey     = "meu15_harness_active"
 	UnbrandedAPIKey     = "unbranded_harness_secret"
 )

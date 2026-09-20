@@ -23,7 +23,7 @@ func TestNewStack_ForumGroupsHappy(t *testing.T) {
 		}, nil
 	}}, &stubReferenceCache{})
 
-	rr := forumGet(t, h, "/api/v1/forum/groups", "cav7_readkey")
+	rr := forumGet(t, h, "/api/v1/forum/groups", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.JSONEq(t, `[{"groupId":2,"groupName":"Registered"},{"groupId":3,"groupName":"Administrative"}]`, rr.Body.String())
@@ -45,7 +45,7 @@ func TestNewStack_ForumGroupsEmptyIsEmptyArray(t *testing.T) {
 				return tc.ret, nil
 			}}, &stubReferenceCache{})
 
-			rr := forumGet(t, h, "/api/v1/forum/groups", "cav7_readkey")
+			rr := forumGet(t, h, "/api/v1/forum/groups", "15meu_test_readkey")
 
 			require.Equal(t, http.StatusOK, rr.Code)
 			assert.Equal(t, `[]`, strings.TrimSpace(rr.Body.String()))
@@ -60,7 +60,7 @@ func TestNewStack_ForumGroupsOutageIsInternalJSON(t *testing.T) {
 		return nil, errOutage
 	}}, &stubReferenceCache{})
 
-	rr := forumGet(t, h, "/api/v1/forum/groups", "cav7_readkey")
+	rr := forumGet(t, h, "/api/v1/forum/groups", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusInternalServerError, rr.Code)
 	assert.JSONEq(t, `{"code":13,"message":"error fetching forum groups: simulated datastore outage","details":[]}`, rr.Body.String())
@@ -72,7 +72,7 @@ func TestNewStack_ForumGroupsOutageIsInternalJSON(t *testing.T) {
 func TestNewStack_ForumGroups403UnderTicketScopedKey(t *testing.T) {
 	h := newStack(t)
 
-	rr := forumGet(t, h, "/api/v1/forum/groups", "cav7_ticketskey")
+	rr := forumGet(t, h, "/api/v1/forum/groups", "15meu_test_ticketskey")
 
 	require.Equal(t, http.StatusForbidden, rr.Code)
 	assert.JSONEq(t, `{"code":7,"message":"scope required: read","details":[]}`, rr.Body.String())
@@ -82,7 +82,7 @@ func TestNewStack_ForumGroups403UnderTicketScopedKey(t *testing.T) {
 func TestNewStack_ForumGroupsCarriesCacheControl(t *testing.T) {
 	h := newStack(t)
 
-	rr := forumGet(t, h, "/api/v1/forum/groups", "cav7_readkey")
+	rr := forumGet(t, h, "/api/v1/forum/groups", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, "max-age=600", rr.Header().Get("Cache-Control"))

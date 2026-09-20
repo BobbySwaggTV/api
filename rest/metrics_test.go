@@ -107,7 +107,7 @@ func TestMetrics_CounterLabelsRouteMethodStatusKeyId(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusOK, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -153,7 +153,7 @@ func TestMetrics_DurationHistogramRouteMethodOnly(t *testing.T) {
 
 	before := histogramSampleCount(t, scrapeMetrics(t), "api_http_request_duration_seconds", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusOK, rr.Code)
 
 	families := scrapeMetrics(t)
@@ -207,7 +207,7 @@ func TestMetrics_ScopeDenialCountsUnderRouteWithKeyId(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_ticketskey") // read:tickets ≠ read
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_ticketskey") // read:tickets ≠ read
 	require.Equal(t, http.StatusForbidden, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -228,7 +228,7 @@ func TestMetrics_UnknownPathCountsUnderCatchAllPattern(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/does/not/exist", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/does/not/exist", "15meu_test_readkey")
 	require.Equal(t, http.StatusNotFound, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -291,7 +291,7 @@ func TestMetrics_PanickingHandlerMetersAs500AndPanicPropagates(t *testing.T) {
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	panicked := func() (p any) {
 		defer func() { p = recover() }()
@@ -320,7 +320,7 @@ func TestMetrics_HandlerError500MetersUnderRouteAndKey(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusInternalServerError, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -343,7 +343,7 @@ func TestMetrics_AuthDatastoreOutage503MetersWithEmptyRouteAndKey(t *testing.T) 
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusServiceUnavailable, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -365,7 +365,7 @@ func TestMetrics_WrongMethod405MetersUnderCatchAll(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodPost, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodPost, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusMethodNotAllowed, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -389,7 +389,7 @@ func TestMetrics_CleanPath307MetersUnderCatchAllWithKeyId(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/milpacs/position/search/A//B", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/milpacs/position/search/A//B", "15meu_test_readkey")
 	require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -413,7 +413,7 @@ func TestMetrics_TicketMessagesMetersUnderSubResourcePattern(t *testing.T) {
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/tickets/42/messages", "cav7_ticketskey")
+	rr := do(h, http.MethodGet, "/api/v1/tickets/42/messages", "15meu_test_ticketskey")
 	require.Equal(t, http.StatusOK, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -436,7 +436,7 @@ func TestMetrics_TicketMessagesScopeDenialMetersUnderSubResourcePattern(t *testi
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/tickets/42/messages", "cav7_readkey") // read ≠ read:tickets
+	rr := do(h, http.MethodGet, "/api/v1/tickets/42/messages", "15meu_test_readkey") // read ≠ read:tickets
 	require.Equal(t, http.StatusForbidden, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -458,7 +458,7 @@ func TestMetrics_TicketUnknownSub404MetersUnderSubResourcePattern(t *testing.T) 
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/tickets/42/attachments", "cav7_ticketskey")
+	rr := do(h, http.MethodGet, "/api/v1/tickets/42/attachments", "15meu_test_ticketskey")
 	require.Equal(t, http.StatusNotFound, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -482,7 +482,7 @@ func TestMetrics_TicketsRefMessagesFrozen400MetersUnderItsPattern(t *testing.T) 
 
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
-	rr := do(h, http.MethodGet, "/api/v1/tickets/ref/messages", "cav7_readkey")
+	rr := do(h, http.MethodGet, "/api/v1/tickets/ref/messages", "15meu_test_readkey")
 	require.Equal(t, http.StatusBadRequest, rr.Code)
 
 	after := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
@@ -526,7 +526,7 @@ func TestMetrics_GzippedRequestMetersStatus200(t *testing.T) {
 	before := counterValue(t, scrapeMetrics(t), "api_http_requests_total", labels)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	req.Header.Set("Accept-Encoding", "gzip")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
@@ -557,7 +557,7 @@ func TestMetrics_HEADMetersUnderGetRoutePattern(t *testing.T) {
 	before := counterValue(t, families, "api_http_requests_total", labels)
 	histBefore := histogramSampleCount(t, families, "api_http_request_duration_seconds", histLabels)
 
-	rr := do(h, http.MethodHead, "/api/v1/milpacs/ranks", "cav7_readkey")
+	rr := do(h, http.MethodHead, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 	require.Equal(t, http.StatusOK, rr.Code)
 
 	families = scrapeMetrics(t)
@@ -579,13 +579,13 @@ func TestMetrics_ConcurrentMixedTierRequestsAllMeter(t *testing.T) {
 		wantCode             int
 		labels               map[string]string
 	}{
-		{http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey", http.StatusOK,
+		{http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey", http.StatusOK,
 			map[string]string{"route": "GET /api/v1/milpacs/ranks", "method": "GET", "status": "200", "key_id": "101"}},
 		{http.MethodGet, "/api/v1/milpacs/ranks", "", http.StatusUnauthorized,
 			map[string]string{"route": "", "method": "GET", "status": "401", "key_id": ""}},
-		{http.MethodGet, "/api/v1/milpacs/ranks", "cav7_ticketskey", http.StatusForbidden,
+		{http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_ticketskey", http.StatusForbidden,
 			map[string]string{"route": "GET /api/v1/milpacs/ranks", "method": "GET", "status": "403", "key_id": "102"}},
-		{http.MethodGet, "/api/v1/does/not/exist", "cav7_readkey", http.StatusNotFound,
+		{http.MethodGet, "/api/v1/does/not/exist", "15meu_test_readkey", http.StatusNotFound,
 			map[string]string{"route": "/", "method": "GET", "status": "404", "key_id": "101"}},
 	}
 
@@ -632,16 +632,16 @@ func TestMetrics_RuntimeCollectorsServed(t *testing.T) {
 // Bearer material must NEVER appear in metric names or labels — the only
 // key-derived label value is the validated numeric key id. Drive every auth
 // tier with its real token, then sweep the ENTIRE raw exposition (names,
-// labels, help text) for the cav7_ key prefix.
+// labels, help text) for the 15meu_ key prefix.
 func TestMetrics_BearerMaterialAbsentFromExposition(t *testing.T) {
 	h := newStack(t)
 
 	for _, bearer := range []string{
-		"cav7_readkey",    // valid, scoped — 200
-		"cav7_ticketskey", // valid, wrong scope — 403
-		"cav7_noscopekey", // valid, no scopes — 403
-		"cav7_unknownkey", // unknown — generic 401
-		"",                // missing header — scheme 401
+		"15meu_test_readkey",    // valid, scoped — 200
+		"15meu_test_ticketskey", // valid, wrong scope — 403
+		"15meu_test_noscopekey", // valid, no scopes — 403
+		"15meu_test_unknownkey", // unknown — generic 401
+		"",                      // missing header — scheme 401
 	} {
 		do(h, http.MethodGet, "/api/v1/milpacs/ranks", bearer)
 	}
@@ -651,7 +651,7 @@ func TestMetrics_BearerMaterialAbsentFromExposition(t *testing.T) {
 	outage := rest.New(&fakeDatastore{validateApiKey: func(string) (*datastores.ApiKeyResult, error) {
 		return nil, io.ErrUnexpectedEOF
 	}}, &stubReferenceCache{})
-	do(outage, http.MethodGet, "/api/v1/milpacs/ranks", "cav7_readkey")
+	do(outage, http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_readkey")
 
 	srv := httptest.NewServer(rest.MetricsHandler())
 	defer srv.Close()
@@ -661,7 +661,7 @@ func TestMetrics_BearerMaterialAbsentFromExposition(t *testing.T) {
 	raw, err := io.ReadAll(res.Body)
 	require.NoError(t, err)
 
-	assert.NotContains(t, string(raw), "cav7_",
+	assert.NotContains(t, string(raw), "15meu_",
 		"bearer material leaked into the exposition — key_id is the only permitted key-derived value")
 	assert.Contains(t, string(raw), `key_id="101"`,
 		"the validated key id (not the token) is how consumers are attributed")
@@ -780,7 +780,7 @@ func TestMetrics_SweepNoChildPairsEmptyRouteWithValidatedKey(t *testing.T) {
 		"registration table is missing the direct registrations — the sweep cannot witness them")
 
 	for _, pattern := range patterns {
-		do(h, http.MethodGet, pathForPattern(pattern), "cav7_sweepkey")
+		do(h, http.MethodGet, pathForPattern(pattern), "15meu_test_sweepkey")
 	}
 
 	families := scrapeMetrics(t)
@@ -919,7 +919,7 @@ func TestMetrics_NotServedThroughPublicChain(t *testing.T) {
 	rr := do(h, http.MethodGet, "/metrics", "")
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "public chain: auth precedes everything")
 
-	rr = do(h, http.MethodGet, "/metrics", "cav7_readkey")
+	rr = do(h, http.MethodGet, "/metrics", "15meu_test_readkey")
 	assert.Equal(t, http.StatusNotFound, rr.Code, "public chain mounts no metrics route")
 	assert.JSONEq(t, `{"code":5,"message":"Not Found","details":[]}`, rr.Body.String())
 

@@ -164,7 +164,7 @@ func TestFixtures_RevokedAPIKeyResolvesToInactiveRow(t *testing.T) {
 // seeded shape its harness tests document: ScopelessAPIKey → one ACTIVE
 // row with ZERO scope mappings; InactiveScopeAPIKey → one ACTIVE row
 // whose every mapping points at an inactive scope definition; the
-// non-"cav7_" tokens → one ACTIVE row apiece with at least one active
+// non-"15meu_" tokens → one ACTIVE row apiece with at least one active
 // scope mapping. Drift here would silently re-vacuify the
 // resolution-edge-case tests in datastores/auth_harness_test.go.
 func TestFixtures_ApiKeyVariantsMatchDocumentedShape(t *testing.T) {

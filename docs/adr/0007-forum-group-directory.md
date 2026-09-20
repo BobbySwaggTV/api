@@ -36,7 +36,7 @@ but it adds query-binding surface for a small, highly cacheable payload,
 and the full directory subsumes it.
 
 We reuse `read` rather than add a `read:groups` scope. The scope catalog
-is owned upstream in the `Cav7/ApiKeyManager` ACP (ADR 0004), so a new
+is owned upstream in the `MEU15/ApiKeyManager` ACP (ADR 0004), so a new
 scope would have to be created there and granted to existing keys before
 the endpoint was usable. The directory's sensitivity matches what `read`
 already exposes, so that coordination cost buys little.

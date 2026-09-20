@@ -20,7 +20,7 @@ func TestNewStack_EmptyAwolListIsEmptyArray(t *testing.T) {
 		return nil, nil
 	}}, &stubReferenceCache{})
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/awol", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/awol", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, `{"awols":[]}`, strings.TrimSpace(rr.Body.String()))

@@ -47,7 +47,7 @@ func TestNewStack_PositionAndAwolOutagesAreInternalJSON(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.path, func(t *testing.T) {
-			rr := positionsGet(t, h, tc.path, "cav7_readkey")
+			rr := positionsGet(t, h, tc.path, "15meu_test_readkey")
 
 			require.Equal(t, http.StatusInternalServerError, rr.Code)
 			assert.JSONEq(t, `{"code":13,"message":"`+tc.want+`","details":[]}`, rr.Body.String())
@@ -63,7 +63,7 @@ func TestNewStack_EmptyPositionGroupsIsEmptyArray(t *testing.T) {
 		return nil, nil
 	}}, &stubReferenceCache{})
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/position/groups", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/position/groups", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, `{"groups":[]}`, strings.TrimSpace(rr.Body.String()))
@@ -77,7 +77,7 @@ func TestNewStack_SearchNilProfilesMapIsEmptyObject(t *testing.T) {
 		return &types.LiteRoster{}, nil // Profiles map nil, not allocated
 	}}, &stubReferenceCache{})
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, `{"profiles":{}}`, strings.TrimSpace(rr.Body.String()))
@@ -91,7 +91,7 @@ func TestNewStack_SearchNilRosterWithNilErrorIsInternalJSON(t *testing.T) {
 		return nil, nil
 	}}, &stubReferenceCache{})
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusInternalServerError, rr.Code)
 	assert.JSONEq(t, `{"code":13,"message":"datastore returned no roster","details":[]}`, rr.Body.String())
@@ -114,7 +114,7 @@ func TestNewStack_SearchSparseLiteProfilePreservesNils(t *testing.T) {
 		}}}, nil
 	}}, &stubReferenceCache{})
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/position/search/Rifleman", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusOK, rr.Code)
 	assert.JSONEq(t, `{"profiles":{"2":{
@@ -169,7 +169,7 @@ func TestNewStack_SearchQueryDecodesOncePreservingSlashes(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.path, func(t *testing.T) {
 			got = ""
-			rr := positionsGet(t, h, tc.path, "cav7_readkey")
+			rr := positionsGet(t, h, tc.path, "15meu_test_readkey")
 
 			require.Equal(t, http.StatusOK, rr.Code)
 			assert.Equal(t, tc.want, got, "datastore must see the standard-decoded query")
@@ -185,7 +185,7 @@ func TestNewStack_SearchQueryDecodesOncePreservingSlashes(t *testing.T) {
 func TestNewStack_SearchWithoutTrailingSlashIsEmptyQuery400(t *testing.T) {
 	h := newStack(t)
 
-	rr := positionsGet(t, h, "/api/v1/milpacs/position/search", "cav7_readkey")
+	rr := positionsGet(t, h, "/api/v1/milpacs/position/search", "15meu_test_readkey")
 
 	require.Equal(t, http.StatusBadRequest, rr.Code)
 	assert.JSONEq(t, `{"code":3,"message":"position query cannot be empty","details":[]}`, rr.Body.String())
@@ -199,7 +199,7 @@ func TestNewStack_WrongMethodOnSearchWildcardIs405WithAllow(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/milpacs/position/search/Rifleman", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -233,7 +233,7 @@ func TestNewStack_PositionAndAwolRoutes403UnderTicketScopedKey(t *testing.T) {
 
 	for _, path := range positionFamilyScopePaths {
 		t.Run(path, func(t *testing.T) {
-			rr := positionsGet(t, h, path, "cav7_ticketskey")
+			rr := positionsGet(t, h, path, "15meu_test_ticketskey")
 
 			require.Equal(t, http.StatusForbidden, rr.Code)
 			assert.JSONEq(t, `{"code":7,"message":"scope required: read","details":[]}`, rr.Body.String())
@@ -302,7 +302,7 @@ func TestNewStack_SearchUncleanPathIs307WithJSONBody(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.path, func(t *testing.T) {
-			rr := positionsGet(t, h, tc.path, "cav7_readkey")
+			rr := positionsGet(t, h, tc.path, "15meu_test_readkey")
 
 			require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
 			assert.Equal(t, tc.wantLocation, rr.Header().Get("Location"))
@@ -325,7 +325,7 @@ func TestNewStack_PositionAndAwolRoutes_MalformedQuerySyntaxIgnored(t *testing.T
 		"/api/v1/milpacs/awol?junk=%zz",
 	} {
 		t.Run(path, func(t *testing.T) {
-			rr := positionsGet(t, h, path, "cav7_readkey")
+			rr := positionsGet(t, h, path, "15meu_test_readkey")
 
 			require.Equal(t, http.StatusOK, rr.Code, "old gateway never ParseForm'd these routes")
 		})

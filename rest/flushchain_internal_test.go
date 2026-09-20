@@ -77,7 +77,7 @@ func TestFlushChain_NewShapedStackStreamsFlushedPrefix(t *testing.T) {
 	defer cancel()
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/", nil)
 	require.NoError(t, err)
-	req.Header.Set("Authorization", "Bearer cav7_sentry_read")
+	req.Header.Set("Authorization", "Bearer 15meu_test_sentry_read")
 	req.Header.Set("Accept-Encoding", "gzip")
 	res, err := srv.Client().Do(req)
 	require.NoError(t, err)

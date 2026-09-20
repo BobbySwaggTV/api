@@ -14,8 +14,8 @@ design bought one thing: a single source of truth for the gRPC service,
 the REST routes, and the OpenAPI document, all falling out of code
 generation.
 
-The cost showed up over time. Two known consumers (`7cav-cavbot2` and the
-ADR tool) used the HTTP gateway. The gRPC port had no confirmed external
+The cost showed up over time. Two known consumers (the community's
+Discord bot and the ADR tool) used the HTTP gateway. The gRPC port had no confirmed external
 consumer, and the heads-up conversation before cutover (#117) confirmed
 nobody generated client code from the served spec either; the spec was
 not accurate enough to drive a generated client. So the gRPC surface and

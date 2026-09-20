@@ -25,7 +25,7 @@ import (
 func ticketsGet(t *testing.T, h http.Handler, path string) *httptest.ResponseRecorder {
 	t.Helper()
 	req := httptest.NewRequest(http.MethodGet, path, nil)
-	req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 	return rr
@@ -131,7 +131,7 @@ func TestNewStack_ListTicketMessagesOutageIsInternalJSON(t *testing.T) {
 func TestNewStack_TicketsRefMessagesIsFrozenParse400(t *testing.T) {
 	h := newStack(t)
 
-	for _, key := range []string{"cav7_ticketskey", "cav7_readkey", "cav7_noscopekey"} {
+	for _, key := range []string{"15meu_test_ticketskey", "15meu_test_readkey", "15meu_test_noscopekey"} {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/tickets/ref/messages", nil)
 		req.Header.Set("Authorization", "Bearer "+key)
 		rr := httptest.NewRecorder()
@@ -168,7 +168,7 @@ func TestNewStack_TicketsRefNoTailIsFrozenParse400(t *testing.T) {
 func TestNewStack_UnknownTicketSubResourceIsJSON404(t *testing.T) {
 	h := newStack(t)
 
-	for _, key := range []string{"cav7_ticketskey", "cav7_readkey"} {
+	for _, key := range []string{"15meu_test_ticketskey", "15meu_test_readkey"} {
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/tickets/42/bogus", nil)
 		req.Header.Set("Authorization", "Bearer "+key)
 		rr := httptest.NewRecorder()
@@ -307,7 +307,7 @@ func TestNewStack_TicketsScopeGateOnEveryRoute(t *testing.T) {
 		"/api/v1/tickets/42/messages",
 		"/api/v1/tickets/categories",
 	} {
-		for _, key := range []string{"cav7_readkey", "cav7_noscopekey"} {
+		for _, key := range []string{"15meu_test_readkey", "15meu_test_noscopekey"} {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
 			req.Header.Set("Authorization", "Bearer "+key)
 			rr := httptest.NewRecorder()
@@ -341,7 +341,7 @@ func TestNewStack_ScopeGatePrecedesBindingErrors(t *testing.T) {
 		"/api/v1/tickets?per_page=%zz",             // ParseForm syntax (list)
 		"/api/v1/tickets/42/messages?per_page=abc", // binder parsing-field (messages)
 	} {
-		for _, key := range []string{"cav7_readkey", "cav7_noscopekey"} {
+		for _, key := range []string{"15meu_test_readkey", "15meu_test_noscopekey"} {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
 			req.Header.Set("Authorization", "Bearer "+key)
 			rr := httptest.NewRecorder()

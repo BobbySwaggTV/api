@@ -32,7 +32,7 @@ import (
 
 // sentryFakeDatastore embeds the Datastore interface so it satisfies the type
 // without implementing every method (same pattern as fakeAuthDatastore); any
-// unstubbed call panics loudly. One key: cav7_sentry_read → key id 7, scope
+// unstubbed call panics loudly. One key: 15meu_test_sentry_read → key id 7, scope
 // "read" — the id (never the token) is what events must carry.
 type sentryFakeDatastore struct {
 	datastores.Datastore
@@ -45,7 +45,7 @@ func (f *sentryFakeDatastore) ValidateApiKey(rawKey string) (*datastores.ApiKeyR
 	if f.validateApiKey != nil {
 		return f.validateApiKey(rawKey)
 	}
-	if rawKey == "cav7_sentry_read" {
+	if rawKey == "15meu_test_sentry_read" {
 		return &datastores.ApiKeyResult{KeyId: 7, UserId: 3, Scopes: map[string]struct{}{"read": {}}}, nil
 	}
 	return nil, nil
@@ -75,7 +75,7 @@ func (*sentryStubCache) ExpandSubtree(ids []uint32) []uint32            { return
 // public chain h.
 func doRanks(h http.Handler) *httptest.ResponseRecorder {
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_sentry_read")
+	req.Header.Set("Authorization", "Bearer 15meu_test_sentry_read")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 	return rr
@@ -260,11 +260,11 @@ func TestSentry_4xxProducesNoEvents(t *testing.T) {
 		wantCode                   int
 	}{
 		{"401 missing credentials", http.MethodGet, "/api/v1/milpacs/ranks", "", http.StatusUnauthorized},
-		{"401 unknown key", http.MethodGet, "/api/v1/milpacs/ranks", "cav7_unknown", http.StatusUnauthorized},
-		{"403 wrong scope", http.MethodGet, "/api/v1/tickets", "cav7_sentry_read", http.StatusForbidden},
-		{"404 unknown path", http.MethodGet, "/api/v1/does/not/exist", "cav7_sentry_read", http.StatusNotFound},
-		{"400 binding error", http.MethodGet, "/api/v1/milpacs/profile/id/notanumber", "cav7_sentry_read", http.StatusBadRequest},
-		{"405 wrong method", http.MethodPost, "/api/v1/milpacs/ranks", "cav7_sentry_read", http.StatusMethodNotAllowed},
+		{"401 unknown key", http.MethodGet, "/api/v1/milpacs/ranks", "15meu_test_unknown", http.StatusUnauthorized},
+		{"403 wrong scope", http.MethodGet, "/api/v1/tickets", "15meu_test_sentry_read", http.StatusForbidden},
+		{"404 unknown path", http.MethodGet, "/api/v1/does/not/exist", "15meu_test_sentry_read", http.StatusNotFound},
+		{"400 binding error", http.MethodGet, "/api/v1/milpacs/profile/id/notanumber", "15meu_test_sentry_read", http.StatusBadRequest},
+		{"405 wrong method", http.MethodPost, "/api/v1/milpacs/ranks", "15meu_test_sentry_read", http.StatusMethodNotAllowed},
 	} {
 		req := httptest.NewRequest(tc.method, tc.path, nil)
 		if tc.bearer != "" {
@@ -357,11 +357,11 @@ func TestSentry_BearerMaterialAbsentFromEventPayloads(t *testing.T) {
 func TestSentry_BeforeSendScrubsRequestAuthMaterial(t *testing.T) {
 	tr := enableSentry(t)
 
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks?key=cav7_secret", nil)
-	req.Header.Set("Authorization", "Bearer cav7_secret")
-	req.Header.Set("authorization", "Bearer cav7_secret") // case-insensitive strip
-	req.Header.Set("Proxy-Authorization", "Basic cav7_secret")
-	req.Header.Set("Cookie", "session=cav7_secret")
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks?key=15meu_test_secret", nil)
+	req.Header.Set("Authorization", "Bearer 15meu_test_secret")
+	req.Header.Set("authorization", "Bearer 15meu_test_secret") // case-insensitive strip
+	req.Header.Set("Proxy-Authorization", "Basic 15meu_test_secret")
+	req.Header.Set("Cookie", "session=15meu_test_secret")
 	req.Header.Set("User-Agent", "sweep-test")
 
 	hub := sentry.CurrentHub().Clone()
@@ -395,7 +395,7 @@ func TestSentry_NoDSNIsCompletePassThrough(t *testing.T) {
 	}}, &sentryStubCache{})
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_sentry_read")
+	req.Header.Set("Authorization", "Bearer 15meu_test_sentry_read")
 	rr := httptest.NewRecorder()
 	panicked := func() (p any) {
 		defer func() { p = recover() }()
@@ -462,7 +462,7 @@ func TestSentry_GzippedPanicReportsAndRepanics(t *testing.T) {
 	}}, &sentryStubCache{})
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/milpacs/ranks", nil)
-	req.Header.Set("Authorization", "Bearer cav7_sentry_read")
+	req.Header.Set("Authorization", "Bearer 15meu_test_sentry_read")
 	req.Header.Set("Accept-Encoding", "gzip")
 	rr := httptest.NewRecorder()
 	panicked := func() (p any) {
@@ -499,9 +499,9 @@ func TestSentry_ConcurrentRequestsKeepIsolatedTags(t *testing.T) {
 	h := New(&sentryFakeDatastore{
 		validateApiKey: func(raw string) (*datastores.ApiKeyResult, error) {
 			switch raw {
-			case "cav7_key_a":
+			case "15meu_test_key_a":
 				return &datastores.ApiKeyResult{KeyId: 11, UserId: 3, Scopes: map[string]struct{}{"read": {}}}, nil
-			case "cav7_key_b":
+			case "15meu_test_key_b":
 				return &datastores.ApiKeyResult{KeyId: 22, UserId: 4, Scopes: map[string]struct{}{"read": {}}}, nil
 			}
 			return nil, nil
@@ -541,8 +541,8 @@ func TestSentry_ConcurrentRequestsKeepIsolatedTags(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(2)
 		var rrA, rrB *httptest.ResponseRecorder
-		go func() { defer wg.Done(); rrA = send("/api/v1/milpacs/ranks", "cav7_key_a") }()
-		go func() { defer wg.Done(); rrB = send("/api/v1/milpacs/profile/id/5", "cav7_key_b") }()
+		go func() { defer wg.Done(); rrA = send("/api/v1/milpacs/ranks", "15meu_test_key_a") }()
+		go func() { defer wg.Done(); rrB = send("/api/v1/milpacs/profile/id/5", "15meu_test_key_b") }()
 		wg.Wait()
 
 		require.Equal(t, http.StatusInternalServerError, rrA.Code)

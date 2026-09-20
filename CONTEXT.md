@@ -16,7 +16,7 @@ handlers and types.
 The API is a read layer over a [XenForo](https://xenforo.com) forum's
 MySQL database, augmented by the `NF Rosters` add-on (which contributes
 the `xf_nf_rosters_*` tables that hold milpac records) and the
-`Cav7/ApiKeyManager` add-on (which contributes the API-key and scope
+`MEU15/ApiKeyManager` add-on (which contributes the API-key and scope
 tables). The API itself owns no schema; it queries upstream tables and
 maps them to its own Go types (the `types` package).
 

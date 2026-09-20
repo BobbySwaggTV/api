@@ -14,7 +14,7 @@ import (
 // no WWW-Authenticate challenge.
 
 // maxTokenLen is the maximum length of a raw API key we'll accept.
-// cav7_ prefix (5) + 64 hex chars = 69; 128 gives generous headroom.
+// 15meu_ prefix (6) + 64 hex chars = 70; 128 gives generous headroom.
 const maxTokenLen = 128
 
 // errBearerScheme is the 401 body returned when the Authorization header is

@@ -20,7 +20,7 @@ import (
 func rosterGet(t *testing.T, h http.Handler, path string) *httptest.ResponseRecorder {
 	t.Helper()
 	req := httptest.NewRequest(http.MethodGet, path, nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 	return rr
@@ -45,7 +45,7 @@ func TestNewStack_AllRosterRoutes403UnderTicketScopedKey(t *testing.T) {
 	for _, path := range rosterRoutePaths {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -69,7 +69,7 @@ func TestNewStack_RosterWrongScopeBeatsBogusEnum_RuledBreak(t *testing.T) {
 	} {
 		t.Run(path, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, path, nil)
-			req.Header.Set("Authorization", "Bearer cav7_ticketskey")
+			req.Header.Set("Authorization", "Bearer 15meu_test_ticketskey")
 			rr := httptest.NewRecorder()
 			h.ServeHTTP(rr, req)
 
@@ -240,7 +240,7 @@ func TestNewStack_WrongMethodOnRosterRouteIs405WithAllow(t *testing.T) {
 	h := newStack(t)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/roster/ROSTER_TYPE_COMBAT", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)
 
@@ -286,7 +286,7 @@ func TestNewStack_LargeRosterComparesCleanAtFullSize(t *testing.T) {
 	require.NoError(t, json.Unmarshal(golden.Profiles["2"], &wantDoe))
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/roster/ROSTER_TYPE_COMBAT", nil)
-	req.Header.Set("Authorization", "Bearer cav7_readkey")
+	req.Header.Set("Authorization", "Bearer 15meu_test_readkey")
 	req.Header.Set("Accept-Encoding", "gzip")
 	rr := httptest.NewRecorder()
 	h.ServeHTTP(rr, req)

@@ -68,7 +68,7 @@ func TestValidateApiKey_RevokedKeyYieldsNil(t *testing.T) {
 func TestValidateApiKey_UnknownKeyYieldsNil(t *testing.T) {
 	ds := openHarnessDatastore(t)
 
-	result, err := ds.ValidateApiKey("cav7_never_issued")
+	result, err := ds.ValidateApiKey("15meu_test_never_issued")
 	if err != nil {
 		t.Fatalf("ValidateApiKey(unknown): %v", err)
 	}
@@ -327,7 +327,7 @@ func TestValidateApiKey_DatabaseErrorIsErrorNotUnauthenticated(t *testing.T) {
 // as an unknown or revoked key. The HTTP tier therefore answers the
 // generic 401 for a no-scope key, NOT the 403 a resolved-but-empty-scope
 // identity would produce (the fake datastore models that identity:
-// cav7_noscopekey → ApiKeyResult{Scopes:{}} → 403). This is the
+// 15meu_test_noscopekey → ApiKeyResult{Scopes:{}} → 403). This is the
 // documented divergence between the fake and real datastores — pinned
 // here so the migration sees it, not fixed by it.
 func TestValidateApiKey_ActiveKeyNoScopeMappingsYieldsNil(t *testing.T) {
@@ -370,7 +370,7 @@ func TestValidateApiKey_FailedResolutionLeavesLastUsedDate(t *testing.T) {
 	bumpFired := make(chan error, 1)
 	ds.OnKeyUsed = func(e error) { bumpFired <- e }
 
-	for _, token := range []string{testdb.RevokedAPIKey, testdb.ScopelessAPIKey, "cav7_never_issued"} {
+	for _, token := range []string{testdb.RevokedAPIKey, testdb.ScopelessAPIKey, "15meu_test_never_issued"} {
 		result, err := ds.ValidateApiKey(token)
 		if err != nil {
 			t.Fatalf("ValidateApiKey(%q): %v", token, err)
@@ -408,11 +408,11 @@ func TestValidateApiKey_FailedResolutionLeavesLastUsedDate(t *testing.T) {
 	}
 }
 
-// The "cav7_" token prefix is branding, not authentication: the lookup
+// The "15meu_" token prefix is branding, not authentication: the lookup
 // hashes the WHOLE token text (SHA-256 computed in-process, see
 // apiKeyDigest) with no prefix handling, so a token minted under a
 // different prefix — or no branding prefix at all — resolves exactly
-// like a cav7_ one. Pinned against real rows so the migration to
+// like a 15meu_ one. Pinned against real rows so the migration to
 // differently-prefixed keys needs no auth-path change.
 func TestValidateApiKey_TokenPrefixIsNotPartOfCredential(t *testing.T) {
 	ds := openHarnessDatastore(t)
@@ -465,11 +465,11 @@ func TestApiKeyDigest_ByteEquivalentToMariaDBSHA2(t *testing.T) {
 		testdb.ScopelessAPIKey,
 		testdb.MeuPrefixAPIKey,
 		testdb.UnbrandedAPIKey,
-		"cav7_harness_activ3",    // one character different
-		"CAV7_HARNESS_ACTIVE",    // case difference
+		"15meu_harness_activ3",   // one character different
+		"15MEU_HARNESS_ACTIVE",   // case difference
 		"meu15_harness_revoked",  // prefix-swapped revoked token
-		"cav7_internal  space",   // preserved internal whitespace
-		"cav7_ünïcode_tøken",     // non-ASCII bytes
+		"15meu_internal  space",  // preserved internal whitespace
+		"15meu_ünïcode_tøken",    // non-ASCII bytes
 		"",                       // empty token
 		strings.Repeat("x", 128), // max bearer-token length
 	}
@@ -504,7 +504,7 @@ func TestApiKeyDigest_ByteEquivalentToMariaDBSHA2(t *testing.T) {
 // changes the SHA-256 hash, so tokens sharing a suffix but differing in
 // prefix are DIFFERENT credentials resolving to different keys — and a
 // one-character change makes a valid token unrecognizable. This is why
-// "cav7_secret" and "meu15_secret" are distinct credentials even though
+// "15meu_secret" and "meu15_secret" are distinct credentials even though
 // the bearer parser ignores the prefix entirely.
 func TestValidateApiKey_TokenTextIsTheWholeCredential(t *testing.T) {
 	ds := openHarnessDatastore(t)
@@ -515,7 +515,7 @@ func TestValidateApiKey_TokenTextIsTheWholeCredential(t *testing.T) {
 		wantKey uint // 0 ⇒ expect a nil result
 	}{
 		{"meu15 token resolves to its own key", testdb.MeuPrefixAPIKey, 5},
-		{"same suffix under cav7_ is a DIFFERENT key", "cav7_harness_active", 1},
+		{"same suffix under 15meu_ is a DIFFERENT key", "15meu_harness_active", 1},
 		{"prefix-swapped revoked token matches nothing", "meu15_harness_revoked", 0},
 		{"single-character change hashes to nothing", "meu15_harness_activ3", 0},
 		{"trailing space changes the hash", testdb.MeuPrefixAPIKey + " ", 0},

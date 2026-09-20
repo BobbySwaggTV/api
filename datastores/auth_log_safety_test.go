@@ -34,7 +34,7 @@ import (
 // enough to grep for in captured logs, and unresolvable so the test
 // exercises the query path without a successful-resolution bump
 // complicating the teardown.
-const leakProbeToken = "cav7_leakprobe_5f8e1d2c9b4a"
+const leakProbeToken = "15meu_test_leakprobe_5f8e1d2c9b4a"
 
 // productionLoggerConfig replicates the logger.Config GORM's
 // logger.Default carries — the shape production actually runs

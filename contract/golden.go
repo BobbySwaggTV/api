@@ -46,15 +46,15 @@ func authHeader(a Auth) (value string, present bool) {
 	case AuthNone:
 		return "", false
 	case AuthRawKey:
-		return "cav7_rawkeywithoutscheme", true
+		return "15meu_test_rawkeywithoutscheme", true
 	case AuthInvalidKey:
-		return "Bearer cav7_unknownkey", true
+		return "Bearer 15meu_test_unknownkey", true
 	case AuthRead:
-		return "Bearer cav7_readkey", true
+		return "Bearer 15meu_test_readkey", true
 	case AuthReadTickets:
-		return "Bearer cav7_ticketskey", true
+		return "Bearer 15meu_test_ticketskey", true
 	case AuthNoScopes:
-		return "Bearer cav7_noscopekey", true
+		return "Bearer 15meu_test_noscopekey", true
 	default:
 		panic(fmt.Sprintf("contract: unknown auth tier %q", a))
 	}
