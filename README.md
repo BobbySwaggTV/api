@@ -1,3 +1,6 @@
+<p align="center">
+  <img width="686" height="200" alt="15th MEU API logo" src="https://github.com/user-attachments/assets/0674cc53-cb8d-4a8a-ad5e-331945ce1f4b" />
+</p>
 # 15th MEU API
 
 An HTTP/JSON API that serves 15th MEU community and roster data. It is a read
